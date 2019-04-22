@@ -21,9 +21,12 @@
 # define		OPT_N	(1 << 6)
 # define		OPT_U	(1 << 7)
 # define		OPT_1	(1 << 8)
+# define		OPT_GG	(1 << 9)
 
 # define		EXIT_ERR		1
 # define		EXIT_FAT_ERR	2
+
+# define		FNAME_SIZE		255
 
 typedef struct	s_ls_opts
 {
@@ -32,12 +35,29 @@ typedef struct	s_ls_opts
 	char		**paths;
 }				t_ls_opts;
 
+typedef struct	s_itm_parsd
+{
+	char		*rules;
+	size_t		rules_s;
+	char		*nlink;
+	size_t		nlink_s;
+	char		*owner;
+	size_t		owner_s;
+	char		*group;
+	size_t		group_s;
+	char		*size;
+	size_t		size_s;
+	char		*date;
+	size_t		date_s;
+}				t_itm_parsd;
+
 typedef struct	s_long_item
 {
 	struct stat	*st;
 	char		*path;
 	char		*name;
-	char		*short_name;
+	char		*link_name;
+	t_itm_parsd	*par;
 }				t_long_item;
 
 void	quicksort(t_ls_opts *opts, t_long_item **array, int size);

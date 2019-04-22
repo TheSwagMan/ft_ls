@@ -33,7 +33,7 @@ int		compare(t_ls_opts *opts, t_long_item *i1, t_long_item *i2)
 	if (opts->opts & OPT_U)
 		ret_val = i1->st->st_atime > i2->st->st_atime;
 	else
-		ret_val = ft_strcmp_case(i1->short_name, i2->short_name) <= 0;
+		ret_val = ft_strcmp(i1->name, i2->name) <= 0;
 	return (ret_val);
 }
 
