@@ -140,7 +140,7 @@ void		long_disp(t_ls_opts *opts, t_long_item *item)
 		i--;
 	}
 	putchar(' ');
-	printf("%ld", item->st->st_nlink);
+	printf("%ld", (long)item->st->st_nlink);
 	putchar(' ');
 	upwd = getpwuid(item->st->st_uid);
 	ggrp = getgrgid(item->st->st_gid);
@@ -154,7 +154,7 @@ void		long_disp(t_ls_opts *opts, t_long_item *item)
 	else
 		printf("%d", item->st->st_gid);
 	putchar(' ');
-	printf("%ld", item->st->st_size);
+	printf("%lld", item->st->st_size);
 	stm = ctime(&item->st->st_mtime);
 	while (*(stm++) != ' ');
 	i = 0;
