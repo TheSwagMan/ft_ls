@@ -1,0 +1,4 @@
+*.o
+*.d
+ft_ls
+libft/libft.a
