@@ -6,7 +6,7 @@
 #    By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/15 16:47:18 by tpotier           #+#    #+#              #
-#    Updated: 2020/01/18 01:53:27 by tpotier          ###   ########.fr        #
+#    Updated: 2020/01/18 02:02:30 by tpotier          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,10 +34,10 @@ DEPS = $(SRCS:.c=.d)
 all: $(NAME)
 
 $(LIBFT):
-	make -C $(LIBFTDIR) libft.a
+	make -C $(LIBFTDIR)
 
 $(LIBLST):
-	make -C $(LIBFTDIR) libft.a
+	make -C $(LIBLSTDIR)
 
 $(NAME): $(OBJS) $(LIBFT) $(LIBLST)
 	$(CC) -o $@ $(OBJS) $(CFLAGS) $(LIBFTFLAGS) $(LIBLSTFLAGS)

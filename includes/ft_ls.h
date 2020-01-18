@@ -11,6 +11,7 @@
 # include <grp.h>
 
 # include "libft.h"
+# include "liblst.h"
 
 # define		EXIT_ERR		1
 # define		EXIT_FAT_ERR	2
@@ -36,8 +37,8 @@ typedef struct	s_ls_opts
 {
 	char		*name;
 	t_opts		opts;
-	char		**dpaths;
-	char		**fpaths;
+	t_lst		*dpaths;
+	t_lst		*fpaths;
 }				t_ls_opts;
 
 typedef struct	s_itm_parsd
@@ -68,6 +69,7 @@ typedef struct	s_long_item
 typedef struct	s_ls_entry
 {
 	struct stat	stat;
+	char		*name;
 }				t_ls_entry;
 
 void	quicksort(t_ls_opts *opts, t_long_item **array, int size);

@@ -42,25 +42,33 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 	}
 }
 
+char		is_directory(char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) != 0)
+		perror("Stat");
+	return (st.st_mode & S_IFDIR ? 1 : 0);
+}
+
 void		parse_opts(t_ls_opts *opts, int ac, char **av)
 {
 	int	k;
 	int	n;
 
 	k = paths_count(ac, av);
-	if (!(opts->paths = (char **)malloc(((k ? k : 1) + 1) * sizeof(char *))))
-		ls_exit("Malloc error", EXIT_FAT_ERR);
-	opts->paths[k ? k : 1] = NULL;
+	opts->dpaths = NULL;
+	opts->fpaths = NULL;
 	opts->name = av[0];
 	opts->opts._n = k > 1 ? 1 : opts->opts._n;
 	if (!k)
-		opts->paths[0] = ".";
+		lst_append(&opts->dpaths, ".");
 	n = 0;
 	while (++n < ac)
 		if (*(av[n]) == '-')
 			add_opt(opts, av[n]);
 		else if (k)
-			opts->paths[--k] = av[n];
+			lst_append(is_directory(av[n]) ? &opts->dpaths : &opts->fpaths, av[n]);
 }
 
 void		init_opts(t_opts *opts)
@@ -85,7 +93,6 @@ t_ls_opts	*init_ls_opts(int ac, char **av)
 	if (!(opts = (t_ls_opts *)malloc(sizeof(*opts))))
 		ls_exit("Malloc error", EXIT_FAT_ERR);
 	init_opts(&(opts->opts));
-	opts->paths = NULL;
 	if (isatty(1))
 	{
 		opts->opts.gg = 1;
@@ -96,15 +103,6 @@ t_ls_opts	*init_ls_opts(int ac, char **av)
 	}
 	parse_opts(opts, ac, av);
 	return (opts);
-}
-
-char		is_directory(char *path)
-{
-	struct stat	st;
-
-	if (stat(path, &st) != 0)
-		perror("Stat");
-	return (st.st_mode & S_IFDIR ? 1 : 0);
 }
 
 void		ls(char *path, t_ls_opts *opts)
@@ -129,30 +127,68 @@ void		ls(char *path, t_ls_opts *opts)
 		ft_putendl("NOT IMPLEMENTED");
 }
 
+void	disp_lst(t_lst *lst)
+{
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		printf("%s\n", lst->data);
+		lst = lst->next;
+	}
+}
+
+t_ls_entry	*analyze_path(char *path)
+{
+	t_ls_entry	*ent;
+
+	if (!(ent = malloc(sizeof(*ent))))
+		ls_exit("Malloc error", EXIT_FAT_ERR);
+	if (stat(path, &ent->stat) != 0)
+		perror("Stat");
+	ent->name = path;
+	return (ent);
+}
+
+void		display_entry_list(t_lst *lst)
+{
+	t_ls_entry	*ent;
+
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		ent = lst->data;
+		ft_printf("%o\t%s\n", ent->stat.st_mode, ent->name);
+		lst = lst->next;
+	}
+}
+
+t_lst		*analyze_path_lst(t_lst *lst)
+{
+	t_lst	*res;
+
+	res = NULL;
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		lst_append(&res, analyze_path(lst->data));
+		lst = lst->next;
+	}
+	return (res);
+}
+
 int			main(int ac, char **av)
 {
 	t_ls_opts	*opts;
-	int			i;
+	t_lst		*tst;
+
 
 	opts = init_ls_opts(ac, av);
-	/*printf("l: %d\n", opts->opts.l);
-	printf("rr: %d\n", opts->opts.rr);
-	printf("_n: %d\n", opts->opts._n);
-	printf("a: %d\n", opts->opts.a);
-	printf("r: %d\n", opts->opts.r);
-	printf("t: %d\n", opts->opts.t);
-	printf("n: %d\n", opts->opts.n);
-	printf("u: %d\n", opts->opts.u);
-	printf("uu: %d\n", opts->opts.uu);
-	printf("_1: %d\n", opts->opts._1);
-	printf("gg: %d\n", opts->opts.gg);
-	*/
-	i = 0;
-	while (opts->paths[i])
-	while (*opts->paths)
+	tst = analyze_path_lst(opts->fpaths);
+	display_entry_list(tst);
+	while (opts->dpaths)
 	{
-		printf("%s -> %d\n", *opts->paths, is_directory(*opts->paths));
-		ls(*(opts->paths++), opts);
+		ls(opts->dpaths->data, opts);
+		opts->dpaths = opts->dpaths->next;
 	}
 	return (0);
 }
