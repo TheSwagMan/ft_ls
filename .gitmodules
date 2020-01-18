@@ -1,0 +1,3 @@
+[submodule "liblst"]
+	path = liblst
+	url = https://github.com/TheSwagMan/liblst.git

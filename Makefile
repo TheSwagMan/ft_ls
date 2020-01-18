@@ -6,13 +6,12 @@
 #    By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/15 16:47:18 by tpotier           #+#    #+#              #
-#    Updated: 2019/04/18 18:29:22 by valecart         ###   ########.fr        #
+#    Updated: 2020/01/17 21:07:13 by tpotier          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-FILES = ft_ls \
-		quick_sort
+FILES = ft_ls
 IFILES = ft_ls.h
 NAME = ft_ls
 SDIR = srcs/

@@ -12,27 +12,32 @@
 
 # include "libft.h"
 
-# define		OPT_L	(1 << 0)
-# define		OPT_RR	(1 << 1)
-# define		OPT_A	(1 << 2)
-# define		OPT_R	(1 << 3)
-# define		OPT_T	(1 << 4)
-# define		OPT__N	(1 << 5)
-# define		OPT_N	(1 << 6)
-# define		OPT_U	(1 << 7)
-# define		OPT_1	(1 << 8)
-# define		OPT_GG	(1 << 9)
-
 # define		EXIT_ERR		1
 # define		EXIT_FAT_ERR	2
 
 # define		FNAME_SIZE		255
 
+typedef struct	s_opts
+{
+	uint8_t		l : 1;
+	uint8_t		rr : 1;
+	uint8_t		a : 1;
+	uint8_t		r : 1;
+	uint8_t		t : 1;
+	uint8_t		_n : 1;
+	uint8_t		n : 1;
+	uint8_t		u : 1;
+	uint8_t		uu : 1;
+	uint8_t		_1 : 1;
+	uint8_t		gg : 1;
+}				t_opts;
+
 typedef struct	s_ls_opts
 {
 	char		*name;
-	long		opts;
-	char		**paths;
+	t_opts		opts;
+	char		**dpaths;
+	char		**fpaths;
 }				t_ls_opts;
 
 typedef struct	s_itm_parsd
@@ -59,6 +64,11 @@ typedef struct	s_long_item
 	char		*link_name;
 	t_itm_parsd	*par;
 }				t_long_item;
+
+typedef struct	s_ls_entry
+{
+	struct stat	stat;
+}				t_ls_entry;
 
 void	quicksort(t_ls_opts *opts, t_long_item **array, int size);
 
