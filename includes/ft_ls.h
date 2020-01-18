@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
+/*   Updated: 2020/01/18 05:31:40 by tpotier          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_LS_H
 # define FT_LS_H
 
@@ -13,10 +25,10 @@
 # include "libft.h"
 # include "liblst.h"
 
-# define		EXIT_ERR		1
-# define		EXIT_FAT_ERR	2
+# define EXIT_ERR		1
+# define EXIT_FAT_ERR	2
 
-# define		FNAME_SIZE		255
+# define FNAME_SIZE		255
 
 typedef struct	s_opts
 {
@@ -71,7 +83,5 @@ typedef struct	s_ls_entry
 	struct stat	stat;
 	char		*name;
 }				t_ls_entry;
-
-void	quicksort(t_ls_opts *opts, t_long_item **array, int size);
 
 #endif
