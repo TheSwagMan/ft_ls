@@ -1,3 +1,6 @@
 [submodule "liblst"]
 	path = liblst
 	url = https://github.com/TheSwagMan/liblst.git
+[submodule "libft"]
+	path = libft
+	url = https://github.com/TheSwagMan/libft.git
