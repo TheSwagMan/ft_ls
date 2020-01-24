@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/01/18 05:31:40 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/01/24 19:43:17 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,12 @@
 # include <dirent.h>
 # include <time.h>
 # include <stdio.h>
+# include <unistd.h>
 # include <stdlib.h>
 # include <pwd.h>
 # include <grp.h>
+# include <errno.h>
+
 
 # include "libft.h"
 # include "liblst.h"
@@ -81,6 +84,7 @@ typedef struct	s_long_item
 typedef struct	s_ls_entry
 {
 	struct stat	stat;
+	struct stat	rstat;
 	char		*name;
 }				t_ls_entry;
 
