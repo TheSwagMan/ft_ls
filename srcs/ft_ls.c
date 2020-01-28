@@ -56,6 +56,61 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 	}
 }
 
+char		*mode_to_str(mode_t mode)
+{
+	char	*res;
+	int		i;
+
+	if (!(res = malloc(11)))
+		return (NULL);
+	res[10] = 0;
+	res[0] = S_ISREG(mode) ? '-' : res[0];
+	res[0] = S_ISDIR(mode) ? 'd' : res[0];
+	res[0] = S_ISLNK(mode) ? 'l' : res[0];
+	res[0] = S_ISFIFO(mode) ? 'p' : res[0];
+	res[0] = S_ISSOCK(mode) ? 's' : res[0];
+	res[0] = S_ISBLK(mode) ? 'b' : res[0];
+	res[0] = S_ISCHR(mode) ? 'c' : res[0];
+	i = -1;
+	while (++i < 3)
+	{
+		res[1 + 3 * (2 - i)] = ((mode >> (2 + 3 * i)) & 1) ? 'r' : '-';
+		res[2 + 3 * (2 - i)] = ((mode >> (1 + 3 * i)) & 1) ? 'w' : '-';
+		res[3 + 3 * (2 - i)] = ((mode >> (3 * i)) & 1) ? 'x' : '-';
+	}
+	return (res);
+}
+
+char		*owner_to_str(uid_t uid)
+{
+	struct passwd	*pw;
+	
+	pw = getpwuid(uid);
+	return (pw->pw_name);
+}
+
+char		*group_to_str(gid_t gid)
+{
+	struct group	*gr;
+	
+	gr = getgrgid(gid);
+	return (gr->gr_name);
+}
+
+char		*date_to_str(time_t tm)
+{
+	int		i;
+	char	*date;
+
+	// If the modification time of the file is more than 6 months in the past or future, then the year of the last modification is displayed in place of the hour and minute fields.
+	date = ctime(&tm);
+	while (*(date++) != ' ');
+	i = 0;
+	while (date[i++]);
+	while (date[--i] != ':');
+	date[i] = '\0';
+	return (date);
+}
 t_ls_entry	*analyze_path(char *path)
 {
 	t_ls_entry	*ent;
@@ -64,6 +119,11 @@ t_ls_entry	*analyze_path(char *path)
 		ls_exit("Malloc error", EXIT_FAT_ERR);
 	if (lstat(path, &ent->stat) != 0)
 		perror("lstat");
+	ent->str.mode = mode_to_str(ent->stat.st_mode);
+	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
+	ent->str.owner = owner_to_str(ent->stat.st_uid);
+	ent->str.group = group_to_str(ent->stat.st_gid);
+	ent->str.size = ft_itoa(ent->stat.st_size);
 	/*
 	if (S_ISLNK(ent->stat.st_mode) && stat(path, &ent->rstat) != 0)
 	{
@@ -72,6 +132,7 @@ t_ls_entry	*analyze_path(char *path)
 	}
 	*/
 	ent->name = path;
+
 	return (ent);
 }
 
@@ -127,7 +188,7 @@ char		is_directory(char *path)
 
 	if (stat(path, &st) != 0)
 		perror("Stat");
-	return (st.st_mode & S_IFDIR ? 1 : 0);
+	return (S_ISDIR(st.st_mode));
 }
 
 void		parse_opts(t_ls_opts *opts, int ac, char **av)
@@ -197,8 +258,6 @@ void	disp_lst(t_lst *lst)
 void		display_entry_list(t_lst *lst)
 {
 	t_ls_entry		*ent;
-	int				i;
-	struct passwd	*pw;
 	struct group	*gr;
 	char			*name;
 
@@ -206,36 +265,20 @@ void		display_entry_list(t_lst *lst)
 	while (lst)
 	{
 		ent = lst->data;
-		if (S_ISREG(ent->stat.st_mode))
-			ft_putchar('-');
-		if (S_ISDIR(ent->stat.st_mode))
-			ft_putchar('d');
-		if (S_ISLNK(ent->stat.st_mode))
-			ft_putchar('l');
-		if (S_ISFIFO(ent->stat.st_mode))
-			ft_putchar('p');
-		if (S_ISSOCK(ent->stat.st_mode))
-			ft_putchar('s');
-		if (S_ISBLK(ent->stat.st_mode))
-			ft_putchar('b');
-		if (S_ISCHR(ent->stat.st_mode))
-			ft_putchar('c');
-		i = -1;
-		while (++i < 3)
-		{
-			ft_putchar(((ent->stat.st_mode >> (2 + 3 * (2 - i))) & 1) ? 'r' : '-');
-			ft_putchar(((ent->stat.st_mode >> (1 + 3 * (2 - i))) & 1) ? 'w' : '-');
-			ft_putchar(((ent->stat.st_mode >> (3 * (2 - i))) & 1) ? 'x' : '-');
-		}
-		pw = getpwuid(ent->stat.st_uid);
+		ft_putstr(ent->str.mode);
+		ft_putchar(' ');
+		ft_putstr(ent->str.nlink);
+		ft_putchar(' ');
+		ft_putstr(ent->str.owner);
+		ft_putchar(' ');
+		ft_putstr(ent->str.group);
+		ft_putchar(' ');
+		ft_putstr(ent->str.size);
+		ft_putchar(' ');
+		ft_putstr(ent->str.date);
+		ft_putchar(' ');
+		ft_putstr(ent->name);
 		gr = getgrgid(ent->stat.st_gid);
-		char *date = ctime(&ent->stat.st_mtime);
-		while (*(date++) != ' ');
-		i = 0;
-		while (date[i++]);
-		while (date[--i] != ':');
-		date[i] = '\0';
-		ft_printf("\t%d\t%s\t%s\t%d\t%s\t%s", ent->stat.st_nlink, pw->pw_name, gr->gr_name, ent->stat.st_size, date, ent->name);
 		if (S_ISLNK(ent->stat.st_mode))
 		{
 			if (!(name = malloc(ent->stat.st_size + 1)))
@@ -248,6 +291,11 @@ void		display_entry_list(t_lst *lst)
 		ft_putchar('\n');
 		lst = lst->next;
 	}
+}
+
+int			sort_by_name(void *e1, void *e2)
+{
+	return (ft_strcmp(((t_ls_entry *)e1)->name, ((t_ls_entry *)e2)->name) > 0);
 }
 
 void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2))
@@ -263,11 +311,6 @@ void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2))
 	*lst = new;
 }
 
-int			f(void *e1, void *e2)
-{
-	return (ft_strcmp(((t_ls_entry *)e1)->name, ((t_ls_entry *)e2)->name) > 0);
-}
-
 void		ls(char *path, t_ls_opts *opts)
 {
 	int		size;
@@ -281,7 +324,7 @@ void		ls(char *path, t_ls_opts *opts)
 		ft_putendl(":");
 	}
 	dir_analyze(opts, path, &lst);
-	//sort_entry_list(&lst, f);
+	sort_entry_list(&lst, sort_by_name);
 	display_entry_list(lst);
 	/*
 	if (opts->opts.l)
@@ -313,7 +356,7 @@ int			main(int ac, char **av)
 
 	opts = init_ls_opts(ac, av);
 	tst = analyze_path_lst(opts->fpaths);
-	sort_entry_list(&tst, f);
+	sort_entry_list(&tst, sort_by_name);
 	display_entry_list(tst);
 	if (tst)
 		ft_putchar('\n');

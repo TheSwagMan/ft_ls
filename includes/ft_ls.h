@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/01/24 19:43:17 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/01/28 13:48:04 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ typedef struct	s_ls_opts
 	t_lst		*fpaths;
 }				t_ls_opts;
 
-typedef struct	s_itm_parsd
+typedef struct	s_entry_str
 {
-	char		*rules;
-	size_t		rules_s;
+	char		*mode;
+	size_t		mode_s;
 	char		*nlink;
 	size_t		nlink_s;
 	char		*owner;
@@ -70,7 +70,7 @@ typedef struct	s_itm_parsd
 	size_t		size_s;
 	char		*date;
 	size_t		date_s;
-}				t_itm_parsd;
+}				t_entry_str;
 
 typedef struct	s_long_item
 {
@@ -78,7 +78,7 @@ typedef struct	s_long_item
 	char		*path;
 	char		*name;
 	char		*link_name;
-	t_itm_parsd	*par;
+	t_entry_str	*par;
 }				t_long_item;
 
 typedef struct	s_ls_entry
@@ -86,6 +86,7 @@ typedef struct	s_ls_entry
 	struct stat	stat;
 	struct stat	rstat;
 	char		*name;
+	t_entry_str	str;
 }				t_ls_entry;
 
 #endif
