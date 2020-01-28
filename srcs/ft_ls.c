@@ -64,8 +64,13 @@ t_ls_entry	*analyze_path(char *path)
 		ls_exit("Malloc error", EXIT_FAT_ERR);
 	if (lstat(path, &ent->stat) != 0)
 		perror("lstat");
-	if (stat(path, &ent->rstat) != 0)
+	/*
+	if (S_ISLNK(ent->stat.st_mode) && stat(path, &ent->rstat) != 0)
+	{
+		ft_putendl(path);
 		perror("stat");
+	}
+	*/
 	ent->name = path;
 	return (ent);
 }
@@ -245,6 +250,24 @@ void		display_entry_list(t_lst *lst)
 	}
 }
 
+void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2))
+{
+	t_lst	*new;
+
+	if (!lst || !*lst)
+		return ;
+	new = NULL;
+	lst_goto_n(lst, 0);
+	while (*lst)
+		lst_insert_sorted(&new, lst_pop(lst), f);
+	*lst = new;
+}
+
+int			f(void *e1, void *e2)
+{
+	return (ft_strcmp(((t_ls_entry *)e1)->name, ((t_ls_entry *)e2)->name) > 0);
+}
+
 void		ls(char *path, t_ls_opts *opts)
 {
 	int		size;
@@ -258,6 +281,7 @@ void		ls(char *path, t_ls_opts *opts)
 		ft_putendl(":");
 	}
 	dir_analyze(opts, path, &lst);
+	//sort_entry_list(&lst, f);
 	display_entry_list(lst);
 	/*
 	if (opts->opts.l)
@@ -289,8 +313,10 @@ int			main(int ac, char **av)
 
 	opts = init_ls_opts(ac, av);
 	tst = analyze_path_lst(opts->fpaths);
+	sort_entry_list(&tst, f);
 	display_entry_list(tst);
-	ft_putchar('\n');
+	if (tst)
+		ft_putchar('\n');
 	while (opts->dpaths)
 	{
 		ls(opts->dpaths->data, opts);
