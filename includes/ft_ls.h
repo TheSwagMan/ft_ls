@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/01/28 13:48:04 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/07 14:39:17 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 # define EXIT_FAT_ERR	2
 
 # define FNAME_SIZE		255
+
+# define SEC_IN_6_MON	(60 * 60 * 24 * 30 * 6)
 
 typedef struct	s_opts
 {

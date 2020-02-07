@@ -100,17 +100,25 @@ char		*group_to_str(gid_t gid)
 char		*date_to_str(time_t tm)
 {
 	int		i;
-	char	*date;
+	char	*tmp;
+	char	date[13];
+	time_t	now;
 
-	// If the modification time of the file is more than 6 months in the past or future, then the year of the last modification is displayed in place of the hour and minute fields.
-	date = ctime(&tm);
-	while (*(date++) != ' ');
-	i = 0;
-	while (date[i++]);
-	while (date[--i] != ':');
-	date[i] = '\0';
-	return (date);
+	time(&now);
+	tmp = ctime(&tm);
+	i = -1;
+	while (++i < 7)
+		date[i] = tmp[i + 4];
+	i = -1;
+	while (++i < 5)
+		if (tm < now - SEC_IN_6_MON || tm > now)
+			date[i + 7] = tmp[i + 19];
+		else
+			date[i + 7] = tmp[i + 11];
+	date[12] = 0;
+	return (ft_strdup(date));
 }
+
 t_ls_entry	*analyze_path(char *path)
 {
 	t_ls_entry	*ent;
@@ -124,6 +132,13 @@ t_ls_entry	*analyze_path(char *path)
 	ent->str.owner = owner_to_str(ent->stat.st_uid);
 	ent->str.group = group_to_str(ent->stat.st_gid);
 	ent->str.size = ft_itoa(ent->stat.st_size);
+	ent->str.date = date_to_str(ent->stat.st_mtime);
+	ent->str.mode_s = 10;
+	ent->str.nlink_s = ft_strlen(ent->str.nlink);
+	ent->str.owner_s = ft_strlen(ent->str.owner);
+	ent->str.group_s = ft_strlen(ent->str.group);
+	ent->str.size_s = ft_strlen(ent->str.size);
+	ent->str.date_s = 12;
 	/*
 	if (S_ISLNK(ent->stat.st_mode) && stat(path, &ent->rstat) != 0)
 	{
@@ -255,7 +270,7 @@ void	disp_lst(t_lst *lst)
 	}
 }
 
-void		display_entry_list(t_lst *lst)
+void		display_entry_list(t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry		*ent;
 	struct group	*gr;
@@ -266,13 +281,14 @@ void		display_entry_list(t_lst *lst)
 	{
 		ent = lst->data;
 		ft_putstr(ent->str.mode);
-		ft_putchar(' ');
+		ft_putnchar(' ', 2 + (max->nlink_s - ent->str.nlink_s));
 		ft_putstr(ent->str.nlink);
 		ft_putchar(' ');
 		ft_putstr(ent->str.owner);
-		ft_putchar(' ');
+		ft_putnchar(' ', 2 + (max->owner_s - ent->str.owner_s));
 		ft_putstr(ent->str.group);
-		ft_putchar(' ');
+		ft_putnchar(' ', 1 + (max->group_s - ent->str.group_s));
+		ft_putnchar(' ', 1 + (max->size_s - ent->str.size_s));
 		ft_putstr(ent->str.size);
 		ft_putchar(' ');
 		ft_putstr(ent->str.date);
@@ -311,10 +327,54 @@ void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2))
 	*lst = new;
 }
 
+t_entry_str	*get_max_size(t_lst *lst)
+{
+	t_entry_str	*max;
+	t_entry_str	tmp;
+
+	if (!(max = malloc(sizeof(*max))))
+		ls_exit("Malloc", EXIT_FAT_ERR);
+	max->mode_s = 0;
+	max->nlink_s = 0;
+	max->owner_s = 0;
+	max->group_s = 0;
+	max->size_s = 0;
+	max->date_s = 0;
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		tmp = ((t_ls_entry *)lst->data)->str;
+		if (tmp.mode_s > max->mode_s)
+			max->mode_s = tmp.mode_s;
+		if (tmp.nlink_s > max->nlink_s)
+			max->nlink_s = tmp.nlink_s;
+		if (tmp.owner_s > max->owner_s)
+			max->owner_s = tmp.owner_s;
+		if (tmp.group_s > max->group_s)
+			max->group_s = tmp.group_s;
+		if (tmp.size_s > max->size_s)
+			max->size_s = tmp.size_s;
+		if (tmp.date_s > max->date_s)
+			max->date_s = tmp.date_s;
+		lst = lst->next;
+	}
+	return (max);
+}
+
+void		ls_disp_job(t_lst *lst)
+{
+	t_entry_str	*max;
+
+	sort_entry_list(&lst, sort_by_name);
+	max = get_max_size(lst);
+	display_entry_list(lst, max);
+	free(max);
+}
+
 void		ls(char *path, t_ls_opts *opts)
 {
-	int		size;
-	t_lst	*lst;
+	int			size;
+	t_lst		*lst;
 
 	lst = NULL;
 	size = 1;//get_long_list(opts, path, &lst);
@@ -324,8 +384,7 @@ void		ls(char *path, t_ls_opts *opts)
 		ft_putendl(":");
 	}
 	dir_analyze(opts, path, &lst);
-	sort_entry_list(&lst, sort_by_name);
-	display_entry_list(lst);
+	ls_disp_job(lst);
 	/*
 	if (opts->opts.l)
 		full_long_display(opts, lst, size);
@@ -356,8 +415,7 @@ int			main(int ac, char **av)
 
 	opts = init_ls_opts(ac, av);
 	tst = analyze_path_lst(opts->fpaths);
-	sort_entry_list(&tst, sort_by_name);
-	display_entry_list(tst);
+	ls_disp_job(tst);
 	if (tst)
 		ft_putchar('\n');
 	while (opts->dpaths)
