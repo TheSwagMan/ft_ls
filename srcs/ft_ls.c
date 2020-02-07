@@ -265,7 +265,7 @@ void	disp_lst(t_lst *lst)
 	lst_goto_n(&lst, 0);
 	while (lst)
 	{
-		printf("%s\t", lst->data);
+		printf("%s\t", (char *)lst->data);
 		lst = lst->next;
 	}
 }
@@ -273,7 +273,6 @@ void	disp_lst(t_lst *lst)
 void		display_entry_list(t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry		*ent;
-	struct group	*gr;
 	char			*name;
 
 	lst_goto_n(&lst, 0);
@@ -294,7 +293,6 @@ void		display_entry_list(t_lst *lst, t_entry_str *max)
 		ft_putstr(ent->str.date);
 		ft_putchar(' ');
 		ft_putstr(ent->name);
-		gr = getgrgid(ent->stat.st_gid);
 		if (S_ISLNK(ent->stat.st_mode))
 		{
 			if (!(name = malloc(ent->stat.st_size + 1)))
@@ -373,11 +371,9 @@ void		ls_disp_job(t_lst *lst)
 
 void		ls(char *path, t_ls_opts *opts)
 {
-	int			size;
 	t_lst		*lst;
 
 	lst = NULL;
-	size = 1;//get_long_list(opts, path, &lst);
 	if (opts->opts._n)
 	{
 		ft_putstr(path);
