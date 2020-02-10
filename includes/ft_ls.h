@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/07 14:39:17 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/10 19:07:30 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <limits.h>
 # include <dirent.h>
 # include <time.h>
-# include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <pwd.h>

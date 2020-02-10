@@ -86,7 +86,7 @@ char		*owner_to_str(uid_t uid)
 	struct passwd	*pw;
 	
 	pw = getpwuid(uid);
-	return (pw->pw_name);
+	return (ft_strdup(pw->pw_name));
 }
 
 char		*group_to_str(gid_t gid)
@@ -94,7 +94,7 @@ char		*group_to_str(gid_t gid)
 	struct group	*gr;
 	
 	gr = getgrgid(gid);
-	return (gr->gr_name);
+	return (ft_strdup(gr->gr_name));
 }
 
 char		*date_to_str(time_t tm)
@@ -119,6 +119,29 @@ char		*date_to_str(time_t tm)
 	return (ft_strdup(date));
 }
 
+char		*format_majmin(dev_t rdev)
+{
+	char	*min;
+	char	*maj;
+	char	*res;
+	uint8_t	i;
+
+	if (!(res = ft_memalloc(8)))
+		ls_exit("malloc", EXIT_FAT_ERR);
+	i = 0;
+	maj = ft_itoa(rdev >> 24 & 0xff);
+	min = ft_itoa(rdev & 0xff);
+	while (i < 3 - ft_strlen(maj))
+		res[i++] = ' ';
+	ft_strcat(res, maj);
+	ft_strcat(res, ", ");
+	i = 0;
+	while (i < 3 - ft_strlen(min))
+		res[5 + i++] = ' ';
+	ft_strcat(res, min);
+	return (res);
+}
+
 t_ls_entry	*analyze_path(char *path)
 {
 	t_ls_entry	*ent;
@@ -131,7 +154,10 @@ t_ls_entry	*analyze_path(char *path)
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
 	ent->str.owner = owner_to_str(ent->stat.st_uid);
 	ent->str.group = group_to_str(ent->stat.st_gid);
-	ent->str.size = ft_itoa(ent->stat.st_size);
+	if (S_ISCHR(ent->stat.st_mode) || S_ISBLK(ent->stat.st_mode))
+		ent->str.size = format_majmin(ent->stat.st_rdev);
+	else
+		ent->str.size = ft_itoa(ent->stat.st_size);
 	ent->str.date = date_to_str(ent->stat.st_mtime);
 	ent->str.mode_s = 10;
 	ent->str.nlink_s = ft_strlen(ent->str.nlink);
@@ -265,7 +291,7 @@ void	disp_lst(t_lst *lst)
 	lst_goto_n(&lst, 0);
 	while (lst)
 	{
-		printf("%s\t", (char *)lst->data);
+		ft_printf("%s\t", (char *)lst->data);
 		lst = lst->next;
 	}
 }
@@ -274,6 +300,7 @@ void		display_entry_list(t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry		*ent;
 	char			*name;
+	int				size;
 
 	lst_goto_n(&lst, 0);
 	while (lst)
@@ -295,12 +322,15 @@ void		display_entry_list(t_lst *lst, t_entry_str *max)
 		ft_putstr(ent->name);
 		if (S_ISLNK(ent->stat.st_mode))
 		{
-			if (!(name = malloc(ent->stat.st_size + 1)))
+			size = ent->stat.st_size ? ent->stat.st_size : PATH_MAX;
+			if (!(name = malloc(size + 1)))
 				ls_exit("Malloc", EXIT_FAT_ERR);
-			if (readlink(ent->name, name, ent->stat.st_size + 1) != ent->stat.st_size)
+			if (readlink(ent->name, name, size) != ent->stat.st_size && ent->stat.st_size)
 				ls_exit("readlink", EXIT_FAT_ERR);
-			name[ent->stat.st_size] = '\0';
-			ft_printf(" -> %s", name);
+			name[size] = '\0';
+			ft_putstr(" -> ");
+			ft_putstr(name);
+			free(name);
 		}
 		ft_putchar('\n');
 		lst = lst->next;
