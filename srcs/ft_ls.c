@@ -139,16 +139,33 @@ char		*format_majmin(dev_t rdev)
 	while (i < 3 - ft_strlen(min))
 		res[5 + i++] = ' ';
 	ft_strcat(res, min);
+	free(maj);
+	free(min);
 	return (res);
 }
 
-t_ls_entry	*analyze_path(char *path)
+char		*path_cat(char *dir, char *file)
+{
+	char	*res;
+
+	if (!(res = malloc(ft_strlen(dir) + ft_strlen(file) + 2)))
+		ls_exit("Malloc", EXIT_FAT_ERR);
+	*res = '\0';
+	ft_strcat(res, dir);
+	ft_strcat(res, "/");
+	ft_strcat(res, file);
+	return (res);
+}
+
+t_ls_entry	*analyze_path(char *path, char *filename)
 {
 	t_ls_entry	*ent;
+	char		*fullpath;
 
+	fullpath = path_cat(path, filename);
 	if (!(ent = malloc(sizeof(*ent))))
 		ls_exit("Malloc error", EXIT_FAT_ERR);
-	if (lstat(path, &ent->stat) != 0)
+	if (lstat(fullpath, &ent->stat) != 0)
 		perror("lstat");
 	ent->str.mode = mode_to_str(ent->stat.st_mode);
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
@@ -172,9 +189,25 @@ t_ls_entry	*analyze_path(char *path)
 		perror("stat");
 	}
 	*/
-	ent->name = path;
-
+	ent->name = ft_strdup(filename);
+	free(fullpath);
 	return (ent);
+}
+
+void		free_ls_entry(void *tmp)
+{
+	t_ls_entry	*ent;
+
+	ent = (t_ls_entry *)tmp;
+	//ft_printf("freeing %s\n", ent->name);
+	free(ent->str.mode);
+	free(ent->str.nlink);
+	free(ent->str.owner);
+	free(ent->str.group);
+	free(ent->str.size);
+	free(ent->str.date);
+	free(ent->name);
+	free(ent);
 }
 
 DIR			*get_dir(t_ls_opts *opts, char *path)
@@ -192,19 +225,6 @@ DIR			*get_dir(t_ls_opts *opts, char *path)
 	return (d);
 }
 
-char		*path_cat(char *dir, char *file)
-{
-	char	*res;
-
-	if (!(res = malloc(ft_strlen(dir) + ft_strlen(file) + 2)))
-		ls_exit("Malloc", EXIT_FAT_ERR);
-	*res = '\0';
-	ft_strcat(res, dir);
-	ft_strcat(res, "/");
-	ft_strcat(res, file);
-	return (res);
-}
-
 int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 {
 	DIR				*d;
@@ -216,7 +236,7 @@ int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 	while ((ent = readdir(d)))
 		if (!is_hidden(ent->d_name) || opts->opts.a)
 		{
-			lst_append(flst, analyze_path(path_cat(path, ent->d_name)));
+			lst_append(flst, analyze_path(path, ent->d_name));
 			count++;
 		}
 	(void)closedir(d);
@@ -399,6 +419,20 @@ void		ls_disp_job(t_lst *lst)
 	free(max);
 }
 
+int			total_dir(t_lst *lst)
+{
+	int	tot;
+
+	tot = 0;
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		tot += ((t_ls_entry *)lst->data)->stat.st_blocks;
+		lst = lst->next;
+	}
+	return (tot);
+}
+
 void		ls(char *path, t_ls_opts *opts)
 {
 	t_lst		*lst;
@@ -410,7 +444,11 @@ void		ls(char *path, t_ls_opts *opts)
 		ft_putendl(":");
 	}
 	dir_analyze(opts, path, &lst);
+	ft_putstr("total ");
+	ft_putnbr(total_dir(lst));
+	ft_putchar('\n');
 	ls_disp_job(lst);
+	lst_delete(&lst, free_ls_entry);
 	/*
 	if (opts->opts.l)
 		full_long_display(opts, lst, size);
@@ -428,7 +466,7 @@ t_lst		*analyze_path_lst(t_lst *lst)
 	lst_goto_n(&lst, 0);
 	while (lst)
 	{
-		lst_append(&res, analyze_path(lst->data));
+		lst_append(&res, analyze_path(".", lst->data));
 		lst = lst->next;
 	}
 	return (res);
@@ -444,6 +482,7 @@ int			main(int ac, char **av)
 	ls_disp_job(tst);
 	if (tst)
 		ft_putchar('\n');
+	lst_delete(&tst, free_ls_entry);
 	while (opts->dpaths)
 	{
 		ls(opts->dpaths->data, opts);
