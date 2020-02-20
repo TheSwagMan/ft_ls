@@ -31,8 +31,6 @@
 # define EXIT_ERR		1
 # define EXIT_FAT_ERR	2
 
-# define FNAME_SIZE		255
-
 # define SEC_IN_6_MON	(60 * 60 * 24 * 30 * 6)
 
 typedef struct	s_opts
@@ -74,21 +72,42 @@ typedef struct	s_entry_str
 	size_t		date_s;
 }				t_entry_str;
 
-typedef struct	s_long_item
-{
-	struct stat	*st;
-	char		*path;
-	char		*name;
-	char		*link_name;
-	t_entry_str	*par;
-}				t_long_item;
-
 typedef struct	s_ls_entry
 {
 	struct stat	stat;
 	struct stat	rstat;
+	char		*fullpath;
 	char		*name;
 	t_entry_str	str;
 }				t_ls_entry;
+
+
+void		add_opt(t_ls_opts *opts, char *sopts);
+int			sort_by_name(void *e1, void *e2);
+void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2));
+void		parse_opts(t_ls_opts *opts, int ac, char **av);
+void		init_opts(t_opts *opts);
+t_ls_opts	*init_ls_opts(int ac, char **av);
+
+char		*mode_to_str(mode_t mode);
+char		*owner_to_str(uid_t uid);
+char		*group_to_str(gid_t gid);
+char		*date_to_str(time_t tm);
+char		*format_majmin(dev_t rdev);
+void		ls_exit(char *msg, char code);
+int			is_hidden(char *path);
+int			paths_count(int ac, char **av);
+char		*path_cat(char *dir, char *file);
+t_ls_entry	*analyze_path(char *path, char *filename);
+void		free_ls_entry(void *tmp);
+DIR			*get_dir(t_ls_opts *opts, char *path);
+int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
+char		is_directory(char *path);
+void		display_entry_list(t_lst *lst, t_entry_str *max);
+t_entry_str	*get_max_size(t_lst *lst);
+void		ls_disp_job(t_lst *lst);
+int			total_dir(t_lst *lst);
+void		ls(char *path, t_ls_opts *opts);
+t_lst		*analyze_path_lst(t_lst *lst);
 
 #endif

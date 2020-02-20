@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC = gcc
-FILES = ft_ls
+FILES = ft_ls options sorting format display analysis
 IFILES = ft_ls.h
 NAME = ft_ls
 SDIR = srcs/
