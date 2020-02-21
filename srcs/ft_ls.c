@@ -71,18 +71,14 @@ void		ls(char *path, t_ls_opts *opts)
 		ft_putendl(":");
 	}
 	dir_analyze(opts, path, &lst);
-	ft_putstr("total ");
-	ft_putnbr(total_dir(lst));
-	ft_putchar('\n');
-	ls_disp_job(lst);
-	lst_delete(&lst, free_ls_entry);
-	/*
 	if (opts->opts.l)
-		full_long_display(opts, lst, size);
-	else if (opts->opts._1)
-		full_short_disp(opts, lst, size);
-	else
-	*/
+	{
+		ft_putstr("total ");
+		ft_putnbr(total_dir(lst));
+		ft_putchar('\n');
+	}
+	ls_disp_job(opts, lst);
+	lst_delete(&lst, free_ls_entry);
 }
 
 int			main(int ac, char **av)
@@ -91,8 +87,8 @@ int			main(int ac, char **av)
 	t_lst		*tst;
 
 	opts = init_ls_opts(ac, av);
-	tst = analyze_path_lst(opts->fpaths);
-	ls_disp_job(tst);
+	tst = analyze_path_lst(opts, opts->fpaths);
+	ls_disp_job(opts, tst);
 	if (tst && opts->dpaths)
 		ft_putchar('\n');
 	lst_delete(&tst, free_ls_entry);

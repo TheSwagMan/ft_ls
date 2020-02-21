@@ -1,12 +1,11 @@
 #include "ft_ls.h"
 
-void		display_entry_list(t_lst *lst, t_entry_str *max)
+void		display_entry_list_long(t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry		*ent;
 	char			*name;
 	int				size;
 
-	lst_goto_n(&lst, 0);
 	while (lst)
 	{
 		ent = lst->data;
@@ -29,7 +28,8 @@ void		display_entry_list(t_lst *lst, t_entry_str *max)
 			size = ent->stat.st_size ? ent->stat.st_size : PATH_MAX;
 			if (!(name = malloc(size + 1)))
 				ls_exit("Malloc", EXIT_FAT_ERR);
-			if (readlink(ent->fullpath, name, size) != ent->stat.st_size && ent->stat.st_size)
+			if (readlink(ent->fullpath, name, size) != ent->stat.st_size
+					&& ent->stat.st_size)
 				ls_exit("readlink", EXIT_FAT_ERR);
 			name[size] = '\0';
 			ft_putstr(" -> ");
@@ -41,13 +41,32 @@ void		display_entry_list(t_lst *lst, t_entry_str *max)
 	}
 }
 
-void		ls_disp_job(t_lst *lst)
+void		display_entry_list_short(t_lst *lst, t_entry_str *max)
+{
+	t_ls_entry		*ent;
+
+	(void)max;
+	while (lst)
+	{
+		ent = lst->data;
+		ft_putstr(ent->name);
+		ft_putchar(' ');
+		lst = lst->next;
+	}
+	ft_putchar('\n');
+}
+
+void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 {
 	t_entry_str	*max;
 
 	sort_entry_list(&lst, sort_by_name);
 	max = get_max_size(lst);
-	display_entry_list(lst, max);
+	lst_goto_n(&lst, 0);
+	if (opts->opts.l)
+		display_entry_list_long(lst, max);
+	else
+		display_entry_list_short(lst, max);
 	free(max);
 }
 

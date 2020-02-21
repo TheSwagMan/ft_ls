@@ -98,16 +98,17 @@ void		ls_exit(char *msg, char code);
 int			is_hidden(char *path);
 int			paths_count(int ac, char **av);
 char		*path_cat(char *dir, char *file);
-t_ls_entry	*analyze_path(char *path, char *filename);
+t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename);
 void		free_ls_entry(void *tmp);
 DIR			*get_dir(t_ls_opts *opts, char *path);
 int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
 char		is_directory(char *path);
-void		display_entry_list(t_lst *lst, t_entry_str *max);
+void		display_entry_list_long(t_lst *lst, t_entry_str *max);
+void		display_entry_list_short(t_lst *lst, t_entry_str *max);
 t_entry_str	*get_max_size(t_lst *lst);
-void		ls_disp_job(t_lst *lst);
+void		ls_disp_job(t_ls_opts *opts, t_lst *lst);
 int			total_dir(t_lst *lst);
 void		ls(char *path, t_ls_opts *opts);
-t_lst		*analyze_path_lst(t_lst *lst);
+t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
 
 #endif

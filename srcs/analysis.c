@@ -1,6 +1,6 @@
 #include "ft_ls.h"
 
-t_ls_entry	*analyze_path(char *path, char *filename)
+t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 {
 	t_ls_entry	*ent;
 
@@ -8,7 +8,16 @@ t_ls_entry	*analyze_path(char *path, char *filename)
 		ls_exit("Malloc error", EXIT_FAT_ERR);
 	ent->fullpath = path_cat(path, filename);
 	if (lstat(ent->fullpath, &ent->stat) != 0)
-		perror("lstat");
+	{
+		ft_putstr_fd(opts->name, 2);
+		ft_putstr_fd(": cannot access '", 2);
+		ft_putstr_fd(filename, 2);
+		ft_putstr_fd("': ", 2);
+		perror("");
+		free(ent->fullpath);
+		free(ent);
+		return (NULL);
+	}
 	ent->str.mode = mode_to_str(ent->stat.st_mode);
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
 	ent->str.owner = owner_to_str(ent->stat.st_uid);
@@ -24,13 +33,6 @@ t_ls_entry	*analyze_path(char *path, char *filename)
 	ent->str.group_s = ft_strlen(ent->str.group);
 	ent->str.size_s = ft_strlen(ent->str.size);
 	ent->str.date_s = 12;
-	/*
-	if (S_ISLNK(ent->stat.st_mode) && stat(path, &ent->rstat) != 0)
-	{
-		ft_putendl(path);
-		perror("stat");
-	}
-	*/
 	ent->name = ft_strdup(filename);
 	return (ent);
 }
@@ -61,7 +63,7 @@ int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 	while ((ent = readdir(d)))
 		if (!is_hidden(ent->d_name) || opts->opts.a)
 		{
-			lst_append(flst, analyze_path(path, ent->d_name));
+			lst_append(flst, analyze_path(opts, path, ent->d_name));
 			count++;
 		}
 	(void)closedir(d);
@@ -73,7 +75,7 @@ char		is_directory(char *path)
 	struct stat	st;
 
 	if (stat(path, &st) != 0)
-		perror("Stat");
+		return (0);
 	return (S_ISDIR(st.st_mode));
 }
 
@@ -125,15 +127,18 @@ int			total_dir(t_lst *lst)
 	return (tot);
 }
 
-t_lst		*analyze_path_lst(t_lst *lst)
+t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)
 {
-	t_lst	*res;
+	t_lst		*res;
+	t_ls_entry	*tmp;
 
 	res = NULL;
 	lst_goto_n(&lst, 0);
 	while (lst)
 	{
-		lst_append(&res, analyze_path(".", lst->data));
+		tmp = analyze_path(opts, ".", lst->data);
+		if (tmp)
+			lst_append(&res, tmp);
 		lst = lst->next;
 	}
 	return (res);
