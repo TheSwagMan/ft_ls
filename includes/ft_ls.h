@@ -84,6 +84,7 @@ typedef struct	s_ls_entry
 
 void		add_opt(t_ls_opts *opts, char *sopts);
 int			sort_by_name(void *e1, void *e2);
+int			sort_by_date(void *e1, void *e2);
 void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2));
 void		parse_opts(t_ls_opts *opts, int ac, char **av);
 void		init_opts(t_opts *opts);

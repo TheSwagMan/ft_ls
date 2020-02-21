@@ -60,7 +60,10 @@ void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 {
 	t_entry_str	*max;
 
-	sort_entry_list(&lst, sort_by_name);
+	if (opts->opts.t)
+		sort_entry_list(&lst, sort_by_date);
+	else
+		sort_entry_list(&lst, sort_by_name);
 	max = get_max_size(lst);
 	lst_goto_n(&lst, 0);
 	if (opts->opts.l)
