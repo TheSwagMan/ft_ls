@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:10:28 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 19:42:15 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void		display_entry_list_short(t_lst *lst, t_entry_str *max)
 				lst_goto_n(&lst, k * n + l);
 				ent = ((t_ls_entry *)lst->data);
 				ft_putstr(ent->str.name);
-				if (k < file_count / n)
+				if ((k + 1) * n + l < file_count)
 					ft_putnchar(' ', 1 + (max->name_s - ent->str.name_s));
 			}
 		ft_putchar('\n');
@@ -101,16 +101,14 @@ void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 	t_entry_str	*max;
 
 	if (opts->opts.t)
-		sort_entry_list(&lst, sort_by_date);
+		sort_entry_list(opts, &lst, sort_by_date);
 	else
-		sort_entry_list(&lst, sort_by_name);
+		sort_entry_list(opts, &lst, sort_by_name);
 	max = get_max_size(lst);
 	lst_goto_n(&lst, 0);
 	if (opts->opts.l)
 		display_entry_list_long(lst, max);
 	else
-	{
 		display_entry_list_short(lst, max);
-	}
 	free(max);
 }

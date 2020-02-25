@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:14:25 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:15:21 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 19:39:15 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int			sort_by_date(void *e1, void *e2)
 			< ((t_ls_entry *)e2)->stat.st_mtime);
 }
 
-void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2))
+void		sort_entry_list(t_ls_opts *opts, t_lst **lst,
+		int (*f)(void *e1, void *e2))
 {
 	t_lst	*new;
 
@@ -33,6 +34,9 @@ void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2))
 	new = NULL;
 	lst_goto_n(lst, 0);
 	while (*lst)
-		lst_insert_sorted(&new, lst_pop(lst), f);
+		if (opts->opts.r)
+			lst_insert_sorted_rev(&new, lst_pop(lst), f);
+		else
+			lst_insert_sorted(&new, lst_pop(lst), f);
 	*lst = new;
 }
