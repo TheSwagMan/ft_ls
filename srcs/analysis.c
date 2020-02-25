@@ -6,18 +6,20 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:08:16 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 19:55:37 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		set_fields(t_ls_entry *ent)
+void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 {
 	ent->str.mode = mode_to_str(ent->stat.st_mode);
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
-	ent->str.owner = owner_to_str(ent->stat.st_uid);
-	ent->str.group = group_to_str(ent->stat.st_gid);
+	ent->str.owner = opts->opts.n ? ft_itoa(ent->stat.st_uid)
+		: owner_to_str(ent->stat.st_uid);
+	ent->str.group = opts->opts.n ? ft_itoa(ent->stat.st_gid)
+		: group_to_str(ent->stat.st_gid);
 	if (S_ISCHR(ent->stat.st_mode) || S_ISBLK(ent->stat.st_mode))
 		ent->str.size = format_majmin(ent->stat.st_rdev);
 	else
@@ -51,7 +53,7 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 		free(ent);
 		return (NULL);
 	}
-	set_fields(ent);
+	set_fields(opts, ent);
 	return (ent);
 }
 

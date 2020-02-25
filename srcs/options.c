@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:50:58 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:20:23 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 19:52:51 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,5 +90,7 @@ t_ls_opts	*init_ls_opts(int ac, char **av)
 		opts->opts.o1 = 1;
 	}
 	parse_opts(opts, ac, av);
+	if (opts->opts.n)
+		opts->opts.l = 1;
 	return (opts);
 }
