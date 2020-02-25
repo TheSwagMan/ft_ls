@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 18:32:17 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 19:19:09 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,13 @@
 # include <pwd.h>
 # include <grp.h>
 # include <errno.h>
-
-
 # include "libft.h"
 # include "liblst.h"
 
 # define EXIT_ERR		1
 # define EXIT_FAT_ERR	2
 
-# define SEC_IN_6_MON	(60 * 60 * 24 * 30 * 6)
+# define SEC_IN_6_MON	15552000
 
 typedef struct	s_opts
 {
@@ -41,11 +39,11 @@ typedef struct	s_opts
 	uint8_t		a : 1;
 	uint8_t		r : 1;
 	uint8_t		t : 1;
-	uint8_t		_n : 1;
+	uint8_t		n_ : 1;
 	uint8_t		n : 1;
 	uint8_t		u : 1;
 	uint8_t		uu : 1;
-	uint8_t		_1 : 1;
+	uint8_t		o1 : 1;
 	uint8_t		gg : 1;
 }				t_opts;
 
@@ -83,35 +81,34 @@ typedef struct	s_ls_entry
 	t_entry_str	str;
 }				t_ls_entry;
 
+void			add_opt(t_ls_opts *opts, char *sopts);
+int				sort_by_name(void *e1, void *e2);
+int				sort_by_date(void *e1, void *e2);
+void			sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2));
+void			parse_opts(t_ls_opts *opts, int ac, char **av);
+void			init_opts(t_opts *opts);
+t_ls_opts		*init_ls_opts(int ac, char **av);
 
-void		add_opt(t_ls_opts *opts, char *sopts);
-int			sort_by_name(void *e1, void *e2);
-int			sort_by_date(void *e1, void *e2);
-void		sort_entry_list(t_lst **lst, int (*f)(void *e1, void *e2));
-void		parse_opts(t_ls_opts *opts, int ac, char **av);
-void		init_opts(t_opts *opts);
-t_ls_opts	*init_ls_opts(int ac, char **av);
-
-char		*mode_to_str(mode_t mode);
-char		*owner_to_str(uid_t uid);
-char		*group_to_str(gid_t gid);
-char		*date_to_str(time_t tm);
-char		*format_majmin(dev_t rdev);
-void		ls_exit(char *msg, char code);
-int			is_hidden(char *path);
-int			paths_count(int ac, char **av);
-char		*path_cat(char *dir, char *file);
-t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename);
-void		free_ls_entry(void *tmp);
-DIR			*get_dir(t_ls_opts *opts, char *path);
-int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
-char		is_directory(char *path);
-void		display_entry_list_long(t_lst *lst, t_entry_str *max);
-void		display_entry_list_short(t_lst *lst, t_entry_str *max);
-t_entry_str	*get_max_size(t_lst *lst);
-void		ls_disp_job(t_ls_opts *opts, t_lst *lst);
-int			total_dir(t_lst *lst);
-void		ls(char *path, t_ls_opts *opts);
-t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
+char			*mode_to_str(mode_t mode);
+char			*owner_to_str(uid_t uid);
+char			*group_to_str(gid_t gid);
+char			*date_to_str(time_t tm);
+char			*format_majmin(dev_t rdev);
+void			ls_exit(char *msg, char code);
+int				is_hidden(char *path);
+int				paths_count(int ac, char **av);
+char			*path_cat(char *dir, char *file);
+t_ls_entry		*analyze_path(t_ls_opts *opts, char *path, char *filename);
+void			free_ls_entry(void *tmp);
+DIR				*get_dir(t_ls_opts *opts, char *path);
+int				dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
+char			is_directory(char *path);
+void			display_entry_list_long(t_lst *lst, t_entry_str *max);
+void			display_entry_list_short(t_lst *lst, t_entry_str *max);
+t_entry_str		*get_max_size(t_lst *lst);
+void			ls_disp_job(t_ls_opts *opts, t_lst *lst);
+int				total_dir(t_lst *lst);
+void			ls(char *path, t_ls_opts *opts);
+t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
 
 #endif

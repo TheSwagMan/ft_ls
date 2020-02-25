@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/25 19:11:30 by tpotier           #+#    #+#             */
+/*   Updated: 2020/02/25 19:19:36 by tpotier          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 void		ls_exit(char *msg, char code)
@@ -9,46 +21,11 @@ void		ls_exit(char *msg, char code)
 	exit(code);
 }
 
-int			is_hidden(char *path)
-{
-	int	n;
-
-	n = ft_strlen(path);
-	while (n && path[n] != '/')
-		n--;
-	n += n ? 1 : 0;
-	return (path[n] == '.' ? 1 : 0);
-}
-
-int			paths_count(int ac, char **av)
-{
-	int	n;
-
-	n = 0;
-	while (ac > 1)
-		n += (*(av[--ac]) == '-') ? 0 : 1;
-	return (n);
-}
-
-char		*path_cat(char *dir, char *file)
-{
-	char	*res;
-
-	if (!(res = malloc(ft_strlen(dir) + ft_strlen(file) + 2)))
-		ls_exit("Malloc", EXIT_FAT_ERR);
-	*res = '\0';
-	ft_strcat(res, dir);
-	ft_strcat(res, "/");
-	ft_strcat(res, file);
-	return (res);
-}
-
 void		free_ls_entry(void *tmp)
 {
 	t_ls_entry	*ent;
 
 	ent = (t_ls_entry *)tmp;
-	//ft_printf("freeing %s\n", ent->name);
 	free(ent->str.mode);
 	free(ent->str.nlink);
 	free(ent->str.owner);
@@ -65,7 +42,7 @@ void		ls(char *path, t_ls_opts *opts)
 	t_lst		*lst;
 
 	lst = NULL;
-	if (opts->opts._n)
+	if (opts->opts.n_)
 	{
 		ft_putstr(path);
 		ft_putendl(":");

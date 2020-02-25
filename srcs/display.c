@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   display.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
+/*   Updated: 2020/02/25 19:10:28 by tpotier          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 void		display_link(t_ls_entry *ent)
 {
-	int				size;
+	int		size;
 	char	*name;
 
 	if (S_ISLNK(ent->stat.st_mode))
@@ -84,7 +96,6 @@ void		display_entry_list_short(t_lst *lst, t_entry_str *max)
 	}
 }
 
-
 void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 {
 	t_entry_str	*max;
@@ -103,4 +114,3 @@ void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 	}
 	free(max);
 }
-

@@ -6,12 +6,13 @@
 #    By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/15 16:47:18 by tpotier           #+#    #+#              #
-#    Updated: 2020/01/18 02:02:30 by tpotier          ###   ########.fr        #
+#    Updated: 2020/02/25 19:13:14 by tpotier          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-FILES = ft_ls options sorting format display analysis
+FILES = ft_ls options sorting format display analysis dir_utils max_utils \
+		path_utils
 IFILES = ft_ls.h
 NAME = ft_ls
 SDIR = srcs/

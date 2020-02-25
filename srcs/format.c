@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   format.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/25 19:10:49 by tpotier           #+#    #+#             */
+/*   Updated: 2020/02/25 19:11:22 by tpotier          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
 char		*mode_to_str(mode_t mode)
@@ -28,7 +40,7 @@ char		*mode_to_str(mode_t mode)
 char		*owner_to_str(uid_t uid)
 {
 	struct passwd	*pw;
-	
+
 	pw = getpwuid(uid);
 	return (ft_strdup(pw->pw_name));
 }
@@ -36,7 +48,7 @@ char		*owner_to_str(uid_t uid)
 char		*group_to_str(gid_t gid)
 {
 	struct group	*gr;
-	
+
 	gr = getgrgid(gid);
 	return (ft_strdup(gr->gr_name));
 }
@@ -87,4 +99,3 @@ char		*format_majmin(dev_t rdev)
 	free(min);
 	return (res);
 }
-

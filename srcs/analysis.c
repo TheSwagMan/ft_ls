@@ -1,23 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   analysis.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
+/*   Updated: 2020/02/25 19:08:16 by tpotier          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
+void		set_fields(t_ls_entry *ent)
 {
-	t_ls_entry	*ent;
-
-	if (!(ent = malloc(sizeof(*ent))))
-		ls_exit("Malloc error", EXIT_FAT_ERR);
-	ent->fullpath = path_cat(path, filename);
-	if (lstat(ent->fullpath, &ent->stat) != 0)
-	{
-		ft_putstr_fd(opts->name, 2);
-		ft_putstr_fd(": cannot access '", 2);
-		ft_putstr_fd(filename, 2);
-		ft_putstr_fd("': ", 2);
-		perror("");
-		free(ent->fullpath);
-		free(ent);
-		return (NULL);
-	}
 	ent->str.mode = mode_to_str(ent->stat.st_mode);
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
 	ent->str.owner = owner_to_str(ent->stat.st_uid);
@@ -33,24 +29,30 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 	ent->str.group_s = ft_strlen(ent->str.group);
 	ent->str.size_s = ft_strlen(ent->str.size);
 	ent->str.date_s = 12;
-	ent->str.name = ft_strdup(filename);
 	ent->str.name_s = ft_strlen(ent->str.name);
-	return (ent);
 }
 
-DIR			*get_dir(t_ls_opts *opts, char *path)
+t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 {
-	DIR	*d;
+	t_ls_entry	*ent;
 
-	if (!(d = opendir(path)))
+	if (!(ent = malloc(sizeof(*ent))))
+		ls_exit("Malloc error", EXIT_FAT_ERR);
+	ent->fullpath = path_cat(path, filename);
+	ent->str.name = ft_strdup(filename);
+	if (lstat(ent->fullpath, &ent->stat) != 0)
 	{
 		ft_putstr_fd(opts->name, 2);
 		ft_putstr_fd(": cannot access '", 2);
-		ft_putstr_fd(path, 2);
-		perror("'");
-		exit(EXIT_FAT_ERR);
+		ft_putstr_fd(filename, 2);
+		ft_putstr_fd("': ", 2);
+		perror("");
+		free(ent->fullpath);
+		free(ent);
+		return (NULL);
 	}
-	return (d);
+	set_fields(ent);
+	return (ent);
 }
 
 int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
@@ -71,66 +73,6 @@ int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 	return (count);
 }
 
-char		is_directory(char *path)
-{
-	struct stat	st;
-
-	if (stat(path, &st) != 0)
-		return (0);
-	return (S_ISDIR(st.st_mode));
-}
-
-t_entry_str	*get_max_size(t_lst *lst)
-{
-	t_entry_str	*max;
-	t_entry_str	tmp;
-
-	if (!(max = malloc(sizeof(*max))))
-		ls_exit("Malloc", EXIT_FAT_ERR);
-	max->name_s = 0;
-	max->mode_s = 0;
-	max->nlink_s = 0;
-	max->owner_s = 0;
-	max->group_s = 0;
-	max->size_s = 0;
-	max->date_s = 0;
-	lst_goto_n(&lst, 0);
-	while (lst)
-	{
-		tmp = ((t_ls_entry *)lst->data)->str;
-		if (tmp.name_s > max->name_s)
-			max->name_s = tmp.name_s;
-		if (tmp.mode_s > max->mode_s)
-			max->mode_s = tmp.mode_s;
-		if (tmp.nlink_s > max->nlink_s)
-			max->nlink_s = tmp.nlink_s;
-		if (tmp.owner_s > max->owner_s)
-			max->owner_s = tmp.owner_s;
-		if (tmp.group_s > max->group_s)
-			max->group_s = tmp.group_s;
-		if (tmp.size_s > max->size_s)
-			max->size_s = tmp.size_s;
-		if (tmp.date_s > max->date_s)
-			max->date_s = tmp.date_s;
-		lst = lst->next;
-	}
-	return (max);
-}
-
-int			total_dir(t_lst *lst)
-{
-	int	tot;
-
-	tot = 0;
-	lst_goto_n(&lst, 0);
-	while (lst)
-	{
-		tot += ((t_ls_entry *)lst->data)->stat.st_blocks;
-		lst = lst->next;
-	}
-	return (tot);
-}
-
 t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)
 {
 	t_lst		*res;
@@ -147,4 +89,3 @@ t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)
 	}
 	return (res);
 }
-
