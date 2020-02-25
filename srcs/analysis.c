@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:55:37 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 20:03:04 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,12 @@ void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 		ent->str.size = format_majmin(ent->stat.st_rdev);
 	else
 		ent->str.size = ft_itoa(ent->stat.st_size);
-	ent->str.date = date_to_str(ent->stat.st_mtime);
+	if (opts->opts.uu)
+		ent->str.date = date_to_str(ent->stat.st_ctime);
+	else if (opts->opts.u)
+		ent->str.date = date_to_str(ent->stat.st_atime);
+	else
+		ent->str.date = date_to_str(ent->stat.st_mtime);
 	ent->str.mode_s = 10;
 	ent->str.nlink_s = ft_strlen(ent->str.nlink);
 	ent->str.owner_s = ft_strlen(ent->str.owner);

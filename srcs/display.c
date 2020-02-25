@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:50:22 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 20:04:40 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,6 @@ void		display_entry_list_long(t_lst *lst, t_entry_str *max)
 	}
 }
 
-size_t		term_size(void)
-{
-	struct winsize w;
-
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	return (w.ws_col);
-}
-
 void		display_entry_list_short(t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry	*ent;
@@ -111,7 +103,14 @@ void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 	t_entry_str	*max;
 
 	if (opts->opts.t)
-		sort_entry_list(opts, &lst, sort_by_date);
+	{
+		if (opts->opts.uu)
+			sort_entry_list(opts, &lst, sort_by_cdate);
+		else if (opts->opts.u)
+			sort_entry_list(opts, &lst, sort_by_adate);
+		else
+			sort_entry_list(opts, &lst, sort_by_mdate);
+	}
 	else
 		sort_entry_list(opts, &lst, sort_by_name);
 	max = get_max_size(lst);

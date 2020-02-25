@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:39:53 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 20:05:47 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,9 @@ typedef struct	s_ls_entry
 
 void			add_opt(t_ls_opts *opts, char *sopts);
 int				sort_by_name(void *e1, void *e2);
-int				sort_by_date(void *e1, void *e2);
+int				sort_by_mdate(void *e1, void *e2);
+int				sort_by_adate(void *e1, void *e2);
+int				sort_by_cdate(void *e1, void *e2);
 void			sort_entry_list(t_ls_opts *opts, t_lst **lst,
 		int (*f)(void *e1, void *e2));
 void			parse_opts(t_ls_opts *opts, int ac, char **av);
@@ -111,5 +113,6 @@ void			ls_disp_job(t_ls_opts *opts, t_lst *lst);
 int				total_dir(t_lst *lst);
 void			ls(char *path, t_ls_opts *opts);
 t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
+size_t			term_size(void);
 
 #endif
