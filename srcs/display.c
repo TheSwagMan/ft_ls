@@ -6,11 +6,70 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 20:04:40 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 21:00:25 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+void		display_color_letters(char *c)
+{
+	int	n;
+
+	n = 0;
+	while (n++ < 2)
+	{
+		if ((*c >= 'a' && *c <= 'h') || (*c >= 'A' && *c <= 'H'))
+		{
+			if (*c >= 'A' && *c <= 'H')
+				ft_putstr("\e[1m");
+			ft_putstr("\e[");
+			ft_putnbr(30 + *c - ((*c >= 'a' && *c <= 'h') ? 'a' : 'A')
+					+ (n == 2 ? 10 : 0));
+			ft_putchar('m');
+		}
+		c++;
+	}
+}
+
+void		get_env_color(t_ls_entry *ent)
+{
+	char	*lscolors;
+	int		offset;
+
+	lscolors = getenv("LSCOLORS");
+	offset = -1;
+	if (S_ISDIR(ent->stat.st_mode))
+		offset = 0;
+	else if (S_ISLNK(ent->stat.st_mode))
+		offset = 1;
+	else if (S_ISSOCK(ent->stat.st_mode))
+		offset = 2;
+	else if (S_ISFIFO(ent->stat.st_mode))
+		offset = 3;
+	else if (ent->stat.st_mode & S_IXUSR && ent->stat.st_mode & S_ISUID)
+		offset = 7;
+	else if (ent->stat.st_mode & S_IXUSR && ent->stat.st_mode & S_ISGID)
+		offset = 8;
+	else if (ent->stat.st_mode & S_IXUSR)
+		offset = 4;
+	else if (S_ISBLK(ent->stat.st_mode))
+		offset = 5;
+	else if (S_ISCHR(ent->stat.st_mode))
+		offset = 6;
+	if (offset < 0)
+		return ;
+	display_color_letters(lscolors + 2 * offset);
+}
+
+void		display_name(t_ls_opts *opts, t_ls_entry *ent)
+{
+	if (opts->opts.gg && isatty(1))
+		get_env_color(ent);
+	ft_putstr(ent->str.name);
+	if (opts->opts.gg && isatty(1))
+		ft_putstr("\e[0m");
+}
 
 void		display_link(t_ls_entry *ent)
 {
@@ -32,7 +91,7 @@ void		display_link(t_ls_entry *ent)
 	}
 }
 
-void		display_entry_list_long(t_lst *lst, t_entry_str *max)
+void		display_entry_list_long(t_ls_opts *op, t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry		*ent;
 
@@ -52,14 +111,14 @@ void		display_entry_list_long(t_lst *lst, t_entry_str *max)
 		ft_putchar(' ');
 		ft_putstr(ent->str.date);
 		ft_putchar(' ');
-		ft_putstr(ent->str.name);
+		display_name(op, ent);
 		display_link(ent);
 		ft_putchar('\n');
 		lst = lst->next;
 	}
 }
 
-void		display_entry_list_short(t_lst *lst, t_entry_str *max)
+void		display_entry_list_short(t_ls_opts *op, t_lst *lst, t_entry_str *max)
 {
 	t_ls_entry	*ent;
 	long		n;
@@ -80,7 +139,7 @@ void		display_entry_list_short(t_lst *lst, t_entry_str *max)
 			{
 				lst_goto_n(&lst, k * n + l);
 				ent = ((t_ls_entry *)lst->data);
-				ft_putstr(ent->str.name);
+				display_name(op, ent);
 				if ((k + 1) * n + l < file_count)
 					ft_putnchar(' ', 1 + (max->name_s - ent->str.name_s));
 			}
@@ -88,11 +147,11 @@ void		display_entry_list_short(t_lst *lst, t_entry_str *max)
 	}
 }
 
-void		display_entry_list_simple(t_lst *lst)
+void		display_entry_list_simple(t_ls_opts *op, t_lst *lst)
 {
 	while (lst)
 	{
-		ft_putstr(((t_ls_entry *)lst->data)->str.name);
+		display_name(op, lst->data);
 		ft_putchar('\n');
 		lst = lst->next;
 	}
@@ -116,10 +175,10 @@ void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 	max = get_max_size(lst);
 	lst_goto_n(&lst, 0);
 	if (opts->opts.l)
-		display_entry_list_long(lst, max);
+		display_entry_list_long(opts, lst, max);
 	else if (opts->opts.o1)
-		display_entry_list_simple(lst);
+		display_entry_list_simple(opts, lst);
 	else
-		display_entry_list_short(lst, max);
+		display_entry_list_short(opts, lst, max);
 	free(max);
 }

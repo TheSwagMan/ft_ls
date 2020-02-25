@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 20:05:47 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 20:40:18 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,6 @@ void			free_ls_entry(void *tmp);
 DIR				*get_dir(t_ls_opts *opts, char *path);
 int				dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
 char			is_directory(char *path);
-void			display_entry_list_long(t_lst *lst, t_entry_str *max);
-void			display_entry_list_short(t_lst *lst, t_entry_str *max);
 t_entry_str		*get_max_size(t_lst *lst);
 void			ls_disp_job(t_ls_opts *opts, t_lst *lst);
 int				total_dir(t_lst *lst);
