@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 20:03:04 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 22:53:32 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,18 @@ void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 	ent->str.group_s = ft_strlen(ent->str.group);
 	ent->str.size_s = ft_strlen(ent->str.size);
 	ent->str.date_s = 12;
-	ent->str.name_s = ft_strlen(ent->str.name);
+}
+
+void		init_ls_entry(t_ls_entry *ent)
+{
+	ent->fullpath = NULL;
+	ent->str.name = NULL;
+	ent->str.mode = NULL;
+	ent->str.nlink = NULL;
+	ent->str.owner = NULL;
+	ent->str.group = NULL;
+	ent->str.size = NULL;
+	ent->str.date = NULL;
 }
 
 t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
@@ -45,8 +56,10 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 
 	if (!(ent = malloc(sizeof(*ent))))
 		ls_exit("Malloc error", EXIT_FAT_ERR);
+	init_ls_entry(ent);
 	ent->fullpath = path_cat(path, filename);
 	ent->str.name = ft_strdup(filename);
+	ent->str.name_s = ft_strlen(ent->str.name);
 	if (lstat(ent->fullpath, &ent->stat) != 0)
 	{
 		ft_putstr_fd(opts->name, 2);
@@ -58,26 +71,30 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 		free(ent);
 		return (NULL);
 	}
-	set_fields(opts, ent);
+	if (opts->opts.l)
+		set_fields(opts, ent);
 	return (ent);
 }
 
-int			dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
+t_lst		*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 {
 	DIR				*d;
 	struct dirent	*ent;
-	int				count;
+	t_lst			*dirs;
+	char			*tmp;
 
-	count = 0;
+	dirs = NULL;
 	d = get_dir(opts, path);
 	while ((ent = readdir(d)))
 		if (!is_hidden(ent->d_name) || opts->opts.a)
 		{
+			tmp = path_cat(path, ent->d_name);
+			if (is_directory(tmp))
+				lst_append(&dirs, tmp);
 			lst_append(flst, analyze_path(opts, path, ent->d_name));
-			count++;
 		}
 	(void)closedir(d);
-	return (count);
+	return (dirs);
 }
 
 t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)

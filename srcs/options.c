@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:50:58 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:52:51 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 22:53:09 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 		}
 		opts->opts.l = *sopts == 'l' ? 1 : opts->opts.l;
 		opts->opts.rr = *sopts == 'R' ? 1 : opts->opts.rr;
-		opts->opts.n_ = *sopts == 'R' ? 1 : opts->opts.n_;
 		opts->opts.a = *sopts == 'a' ? 1 : opts->opts.a;
 		opts->opts.r = *sopts == 'r' ? 1 : opts->opts.r;
 		opts->opts.t = *sopts == 't' ? 1 : opts->opts.t;
@@ -56,7 +55,7 @@ void		parse_opts(t_ls_opts *opts, int ac, char **av)
 			add_opt(opts, av[n]);
 		else if (k)
 			lst_append(is_directory(av[n])
-					? &opts->dpaths : &opts->fpaths, av[n]);
+					? &opts->dpaths : &opts->fpaths, ft_strdup(av[n]));
 }
 
 void		init_opts(t_opts *opts)
