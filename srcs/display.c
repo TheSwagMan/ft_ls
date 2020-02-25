@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:42:15 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 19:50:22 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,16 @@ void		display_entry_list_short(t_lst *lst, t_entry_str *max)
 	}
 }
 
+void		display_entry_list_simple(t_lst *lst)
+{
+	while (lst)
+	{
+		ft_putstr(((t_ls_entry *)lst->data)->str.name);
+		ft_putchar('\n');
+		lst = lst->next;
+	}
+}
+
 void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 {
 	t_entry_str	*max;
@@ -108,6 +118,8 @@ void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 	lst_goto_n(&lst, 0);
 	if (opts->opts.l)
 		display_entry_list_long(lst, max);
+	else if (opts->opts.o1)
+		display_entry_list_simple(lst);
 	else
 		display_entry_list_short(lst, max);
 	free(max);
