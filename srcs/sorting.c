@@ -2,7 +2,7 @@
 
 int			sort_by_name(void *e1, void *e2)
 {
-	return (ft_strcmp(((t_ls_entry *)e1)->name, ((t_ls_entry *)e2)->name) > 0);
+	return (ft_strcmp(((t_ls_entry *)e1)->str.name, ((t_ls_entry *)e2)->str.name) > 0);
 }
 
 int			sort_by_date(void *e1, void *e2)

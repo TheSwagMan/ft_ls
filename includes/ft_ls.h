@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/10 19:07:30 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/02/25 18:32:17 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/ioctl.h>
 # include <limits.h>
 # include <dirent.h>
 # include <time.h>
@@ -58,6 +59,8 @@ typedef struct	s_ls_opts
 
 typedef struct	s_entry_str
 {
+	char		*name;
+	size_t		name_s;
 	char		*mode;
 	size_t		mode_s;
 	char		*nlink;
@@ -77,7 +80,6 @@ typedef struct	s_ls_entry
 	struct stat	stat;
 	struct stat	rstat;
 	char		*fullpath;
-	char		*name;
 	t_entry_str	str;
 }				t_ls_entry;
 

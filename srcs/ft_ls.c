@@ -55,8 +55,8 @@ void		free_ls_entry(void *tmp)
 	free(ent->str.group);
 	free(ent->str.size);
 	free(ent->str.date);
+	free(ent->str.name);
 	free(ent->fullpath);
-	free(ent->name);
 	free(ent);
 }
 

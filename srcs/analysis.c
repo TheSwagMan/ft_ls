@@ -33,7 +33,8 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 	ent->str.group_s = ft_strlen(ent->str.group);
 	ent->str.size_s = ft_strlen(ent->str.size);
 	ent->str.date_s = 12;
-	ent->name = ft_strdup(filename);
+	ent->str.name = ft_strdup(filename);
+	ent->str.name_s = ft_strlen(ent->str.name);
 	return (ent);
 }
 
@@ -86,6 +87,7 @@ t_entry_str	*get_max_size(t_lst *lst)
 
 	if (!(max = malloc(sizeof(*max))))
 		ls_exit("Malloc", EXIT_FAT_ERR);
+	max->name_s = 0;
 	max->mode_s = 0;
 	max->nlink_s = 0;
 	max->owner_s = 0;
@@ -96,6 +98,8 @@ t_entry_str	*get_max_size(t_lst *lst)
 	while (lst)
 	{
 		tmp = ((t_ls_entry *)lst->data)->str;
+		if (tmp.name_s > max->name_s)
+			max->name_s = tmp.name_s;
 		if (tmp.mode_s > max->mode_s)
 			max->mode_s = tmp.mode_s;
 		if (tmp.nlink_s > max->nlink_s)
