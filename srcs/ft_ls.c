@@ -84,7 +84,7 @@ int			main(int ac, char **av)
 	while (opts->dpaths)
 	{
 		tst = ls(opts->dpaths->data, opts);
-		disp_lst(tst);
+		opts->opts.n_ = 1;
 		opts->dpaths = opts->dpaths->next;
 		if (tst)
 		{
@@ -94,7 +94,7 @@ int			main(int ac, char **av)
 				lst_add(&(opts->dpaths), ft_strdup(tst->data));
 				tst = tst->prev;
 			}
-			lst_add(&(opts->dpaths), tst->data);
+			lst_add(&(opts->dpaths), ft_strdup(tst->data));
 			lst_delete(&tst, free);
 		}
 		if (opts->dpaths)

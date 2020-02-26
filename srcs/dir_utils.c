@@ -31,7 +31,7 @@ char		is_directory(char *path)
 {
 	struct stat	st;
 
-	if (stat(path, &st) != 0)
+	if (lstat(path, &st) != 0)
 		return (0);
 	return (S_ISDIR(st.st_mode));
 }
