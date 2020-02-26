@@ -37,7 +37,7 @@ void		get_env_color(t_ls_entry *ent)
 	char	*lscolors;
 	int		offset;
 
-	lscolors = getenv("LSCOLORS");
+	lscolors = ft_strdup(getenv("LSCOLORS"));
 	offset = -1;
 	if (S_ISDIR(ent->stat.st_mode))
 		offset = 0;
@@ -60,6 +60,7 @@ void		get_env_color(t_ls_entry *ent)
 	if (offset < 0)
 		return ;
 	display_color_letters(lscolors + 2 * offset);
+	free(lscolors);
 }
 
 void		display_name(t_ls_opts *opts, t_ls_entry *ent)
