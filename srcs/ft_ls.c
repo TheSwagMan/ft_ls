@@ -21,6 +21,18 @@ void		ls_exit(char *msg, char code)
 	exit(code);
 }
 
+void		disp_lst(t_lst *lst)
+{
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		ft_printf("%p\n", lst->data);
+		//ft_putstr(" - ");
+		//ft_putendl(lst->data);
+		lst = lst->next;
+	}
+}
+
 void		free_ls_entry(void *tmp)
 {
 	t_ls_entry	*ent;
@@ -57,19 +69,11 @@ t_lst		*ls(char *path, t_ls_opts *opts)
 		ft_putnbr(total_dir(lst));
 		ft_putchar('\n');
 	}
+	disp_lst(lst);
 	ls_disp_job(opts, lst);
+	disp_lst(lst);
 	lst_delete(&lst, free_ls_entry);
 	return (dirs);
-}
-
-void		disp_lst(t_lst *lst)
-{
-	while (lst)
-	{
-		ft_putstr("- ");
-		ft_putendl(lst->data);
-		lst = lst->next;
-	}
 }
 
 int			main(int ac, char **av)

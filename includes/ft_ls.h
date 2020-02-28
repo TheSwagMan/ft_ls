@@ -112,5 +112,6 @@ void			ls_disp_job(t_ls_opts *opts, t_lst *lst);
 int				total_dir(t_lst *lst);
 t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
 size_t			term_size(void);
+void			disp_lst(t_lst *lst);
 
 #endif
