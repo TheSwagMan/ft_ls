@@ -23,10 +23,20 @@ void		ls_exit(char *msg, char code)
 
 void		disp_lst(t_lst *lst)
 {
-	lst_goto_n(&lst, 0);
+	if (!lst)
+		return ;
+	ft_printf("lst = %p\n", lst);
+	while (lst->prev && lst->prev != (void *)0x400000000000000L)
+	{
+		ft_printf("prev = %p\n", lst->prev);
+		lst = lst->prev;
+	}
+	ft_printf("done\n");
+	//lst_goto_n(&lst, 0);
 	while (lst)
 	{
-		ft_printf("%p\n", lst->data);
+		ft_printf("ls = %p\n", lst);
+		ft_printf("case = %p\n", lst->data);
 		//ft_putstr(" - ");
 		//ft_putendl(lst->data);
 		lst = lst->next;
@@ -40,6 +50,7 @@ void		free_ls_entry(void *tmp)
 	if (!tmp)
 		return ;
 	ent = (t_ls_entry *)tmp;
+	ft_printf("ent : %p\n", ent);
 	free(ent->str.mode);
 	free(ent->str.nlink);
 	free(ent->str.owner);

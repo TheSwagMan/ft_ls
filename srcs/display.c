@@ -40,7 +40,7 @@ void		get_env_color(t_ls_entry *ent)
 	int		offset;
 
 	lscolors = getenv("LSCOLORS");
-	lscolors = lscolors ? "Gxfxcxdxbxegedabagacad" : lscolors;
+	lscolors = lscolors ? lscolors : "Gxfxcxdxbxegedabagacad";
 	offset = -1;
 	if (S_ISDIR(ent->stat.st_mode))
 		offset = 0;

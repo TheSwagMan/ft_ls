@@ -14,6 +14,8 @@
 
 void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 {
+	if (!ent)
+		ls_exit("set_field NULL", EXIT_FAT_ERR);
 	ent->str.mode = mode_to_str(ent->stat.st_mode);
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
 	ent->str.owner = opts->opts.n ? ft_itoa(ent->stat.st_uid)
@@ -40,6 +42,8 @@ void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 
 void		init_ls_entry(t_ls_entry *ent)
 {
+	if (!ent)
+		ls_exit("init_ls_entry NULL", EXIT_FAT_ERR);
 	ent->fullpath = NULL;
 	ent->str.name = NULL;
 	ent->str.mode = NULL;

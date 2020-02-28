@@ -21,6 +21,7 @@
 # include <time.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
 # include <pwd.h>
 # include <grp.h>
 # include <errno.h>
@@ -76,7 +77,6 @@ typedef struct	s_entry_str
 typedef struct	s_ls_entry
 {
 	struct stat	stat;
-	struct stat	rstat;
 	char		*fullpath;
 	t_entry_str	str;
 }				t_ls_entry;
