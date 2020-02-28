@@ -25,6 +25,8 @@ void		free_ls_entry(void *tmp)
 {
 	t_ls_entry	*ent;
 
+	if (!tmp)
+		return ;
 	ent = (t_ls_entry *)tmp;
 	free(ent->str.mode);
 	free(ent->str.nlink);
@@ -84,18 +86,25 @@ int			main(int ac, char **av)
 	while (opts->dpaths)
 	{
 		tst = ls(opts->dpaths->data, opts);
-		opts->opts.n_ = 1;
 		opts->dpaths = opts->dpaths->next;
-		if (tst)
+		if (opts->opts.rr)
 		{
-			lst_goto_n(&tst, -1);
-			while (tst->prev)
+			opts->opts.n_ = 1;
+			if (tst)
 			{
-				lst_add(&(opts->dpaths), ft_strdup(tst->data));
-				tst = tst->prev;
+				lst_goto_n(&tst, -1);
+				while (tst->prev)
+				{
+					if (ft_strcmp(filename(tst->data), ".")
+							&& ft_strcmp(filename(tst->data), ".."))
+						lst_add(&(opts->dpaths), ft_strdup(tst->data));
+					tst = tst->prev;
+				}
+				if (ft_strcmp(filename(tst->data), ".")
+						&& ft_strcmp(filename(tst->data), ".."))
+					lst_add(&(opts->dpaths), ft_strdup(tst->data));
+				lst_delete(&tst, free);
 			}
-			lst_add(&(opts->dpaths), ft_strdup(tst->data));
-			lst_delete(&tst, free);
 		}
 		if (opts->dpaths)
 			ft_putchar('\n');

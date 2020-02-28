@@ -82,6 +82,7 @@ typedef struct	s_ls_entry
 }				t_ls_entry;
 
 void			add_opt(t_ls_opts *opts, char *sopts);
+char			*filename(char *path);
 int				sort_by_name(void *e1, void *e2);
 int				sort_by_mdate(void *e1, void *e2);
 int				sort_by_adate(void *e1, void *e2);

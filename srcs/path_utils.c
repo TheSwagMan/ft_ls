@@ -45,3 +45,15 @@ char		*path_cat(char *dir, char *file)
 	ft_strcat(res, file);
 	return (res);
 }
+
+char		*filename(char *path)
+{
+	int	k;
+
+	k = ft_strlen(path);
+	while (k && path[k] != '/')
+		k--;
+	if (path[k] == '/')
+		k++;
+	return (path + k);
+}

@@ -16,6 +16,8 @@ void		display_color_letters(char *c)
 {
 	int	n;
 
+	if (!c)
+		return ;
 	n = 0;
 	while (n++ < 2)
 	{
@@ -37,7 +39,8 @@ void		get_env_color(t_ls_entry *ent)
 	char	*lscolors;
 	int		offset;
 
-	lscolors = ft_strdup(getenv("LSCOLORS"));
+	lscolors = getenv("LSCOLORS");
+	lscolors = lscolors ? "Gxfxcxdxbxegedabagacad" : lscolors;
 	offset = -1;
 	if (S_ISDIR(ent->stat.st_mode))
 		offset = 0;
@@ -60,7 +63,6 @@ void		get_env_color(t_ls_entry *ent)
 	if (offset < 0)
 		return ;
 	display_color_letters(lscolors + 2 * offset);
-	free(lscolors);
 }
 
 void		display_name(t_ls_opts *opts, t_ls_entry *ent)
