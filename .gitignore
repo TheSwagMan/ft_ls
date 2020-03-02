@@ -2,3 +2,4 @@
 *.d
 ft_ls
 libft/libft.a
+.DS_Store
