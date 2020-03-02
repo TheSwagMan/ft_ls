@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 22:53:32 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 16:37:08 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 	else
 		ent->str.size = ft_itoa(ent->stat.st_size);
 	if (opts->opts.uu)
-		ent->str.date = date_to_str(ent->stat.st_ctime);
+		ent->str.date = date_to_str(ent->stat.st_birthtime);
 	else if (opts->opts.u)
 		ent->str.date = date_to_str(ent->stat.st_atime);
 	else
