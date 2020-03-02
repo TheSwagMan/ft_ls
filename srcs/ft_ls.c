@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:11:30 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 22:55:15 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 16:14:55 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,6 @@ void		ls_exit(char *msg, char code)
 	exit(code);
 }
 
-void		disp_lst(t_lst *lst)
-{
-	if (!lst)
-		return ;
-	ft_printf("lst = %p\n", lst);
-	while (lst->prev && lst->prev != (void *)0x400000000000000L)
-	{
-		ft_printf("prev = %p\n", lst->prev);
-		lst = lst->prev;
-	}
-	ft_printf("done\n");
-	//lst_goto_n(&lst, 0);
-	while (lst)
-	{
-		ft_printf("ls = %p\n", lst);
-		ft_printf("case = %p\n", lst->data);
-		//ft_putstr(" - ");
-		//ft_putendl(lst->data);
-		lst = lst->next;
-	}
-}
-
 void		free_ls_entry(void *tmp)
 {
 	t_ls_entry	*ent;
@@ -50,7 +28,6 @@ void		free_ls_entry(void *tmp)
 	if (!tmp)
 		return ;
 	ent = (t_ls_entry *)tmp;
-	ft_printf("ent : %p\n", ent);
 	free(ent->str.mode);
 	free(ent->str.nlink);
 	free(ent->str.owner);
@@ -80,49 +57,51 @@ t_lst		*ls(char *path, t_ls_opts *opts)
 		ft_putnbr(total_dir(lst));
 		ft_putchar('\n');
 	}
-	disp_lst(lst);
-	ls_disp_job(opts, lst);
-	disp_lst(lst);
+	ls_disp_job(opts, &lst);
 	lst_delete(&lst, free_ls_entry);
 	return (dirs);
 }
 
-int			main(int ac, char **av)
+void		dir_part(t_ls_opts *opts)
 {
-	t_ls_opts	*opts;
-	t_lst		*tst;
+	t_lst		*dirs;
+	char		*dir;
 
-	opts = init_ls_opts(ac, av);
-	tst = analyze_path_lst(opts, opts->fpaths);
-	ls_disp_job(opts, tst);
-	if (tst && opts->dpaths)
-		ft_putchar('\n');
-	lst_delete(&tst, free_ls_entry);
 	while (opts->dpaths)
 	{
-		tst = ls(opts->dpaths->data, opts);
+		dirs = ls(opts->dpaths->data, opts);
 		opts->dpaths = opts->dpaths->next;
 		if (opts->opts.rr)
 		{
 			opts->opts.n_ = 1;
-			if (tst)
+			if (dirs)
 			{
-				lst_goto_n(&tst, -1);
-				while (tst->prev)
+				lst_goto_n(&dirs, -1);
+				while (dirs)
 				{
-					if (ft_strcmp(filename(tst->data), ".")
-							&& ft_strcmp(filename(tst->data), ".."))
-						lst_add(&(opts->dpaths), ft_strdup(tst->data));
-					tst = tst->prev;
+					dir = lst_pop(&dirs);
+					if (ft_strcmp(filename(dir), ".")
+							&& ft_strcmp(filename(dir), ".."))
+						lst_add(&(opts->dpaths), dir);
 				}
-				if (ft_strcmp(filename(tst->data), ".")
-						&& ft_strcmp(filename(tst->data), ".."))
-					lst_add(&(opts->dpaths), ft_strdup(tst->data));
-				lst_delete(&tst, free);
 			}
 		}
 		if (opts->dpaths)
 			ft_putchar('\n');
 	}
+}
+
+int			main(int ac, char **av)
+{
+	t_ls_opts	*opts;
+	t_lst		*file_data;
+
+	opts = init_ls_opts(ac, av);
+	file_data = analyze_path_lst(opts, opts->fpaths);
+	ls_disp_job(opts, &file_data);
+	if (file_data && opts->dpaths)
+		ft_putchar('\n');
+	lst_delete(&file_data, free_ls_entry);
+	dir_part(opts);
 	return (0);
 }

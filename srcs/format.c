@@ -6,16 +6,34 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:10:49 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:11:22 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 16:05:40 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
+void		format_perms(mode_t mode, char *res)
+{
+	res[1] = mode & S_IRUSR ? 'r' : '-';
+	res[2] = mode & S_IWUSR ? 'w' : '-';
+	res[3] = mode & S_IXUSR ? 'x' : '-';
+	if (mode & S_ISUID)
+		res[3] = mode & S_IXUSR ? 's' : 'S';
+	res[4] = mode & S_IRGRP ? 'r' : '-';
+	res[5] = mode & S_IWGRP ? 'w' : '-';
+	res[6] = mode & S_IXGRP ? 'x' : '-';
+	if (mode & S_ISGID)
+		res[6] = mode & S_IXGRP ? 's' : 'S';
+	res[7] = mode & S_IROTH ? 'r' : '-';
+	res[8] = mode & S_IWOTH ? 'w' : '-';
+	res[9] = mode & S_IXOTH ? 'x' : '-';
+	if (mode & S_ISVTX)
+		res[6] = mode & S_IXOTH ? 't' : 'T';
+}
+
 char		*mode_to_str(mode_t mode)
 {
 	char	*res;
-	int		i;
 
 	if (!(res = malloc(11)))
 		return (NULL);
@@ -27,13 +45,7 @@ char		*mode_to_str(mode_t mode)
 	res[0] = S_ISSOCK(mode) ? 's' : res[0];
 	res[0] = S_ISBLK(mode) ? 'b' : res[0];
 	res[0] = S_ISCHR(mode) ? 'c' : res[0];
-	i = -1;
-	while (++i < 3)
-	{
-		res[1 + 3 * (2 - i)] = ((mode >> (2 + 3 * i)) & 1) ? 'r' : '-';
-		res[2 + 3 * (2 - i)] = ((mode >> (1 + 3 * i)) & 1) ? 'w' : '-';
-		res[3 + 3 * (2 - i)] = ((mode >> (3 * i)) & 1) ? 'x' : '-';
-	}
+	format_perms(mode, res);
 	return (res);
 }
 
@@ -73,29 +85,4 @@ char		*date_to_str(time_t tm)
 			date[i + 7] = tmp[i + 11];
 	date[12] = 0;
 	return (ft_strdup(date));
-}
-
-char		*format_majmin(dev_t rdev)
-{
-	char	*min;
-	char	*maj;
-	char	*res;
-	uint8_t	i;
-
-	if (!(res = ft_memalloc(8)))
-		ls_exit("malloc", EXIT_FAT_ERR);
-	i = 0;
-	maj = ft_itoa(rdev >> 24 & 0xff);
-	min = ft_itoa(rdev & 0xff);
-	while (i < 3 - ft_strlen(maj))
-		res[i++] = ' ';
-	ft_strcat(res, maj);
-	ft_strcat(res, ", ");
-	i = 0;
-	while (i < 3 - ft_strlen(min))
-		res[5 + i++] = ' ';
-	ft_strcat(res, min);
-	free(maj);
-	free(min);
-	return (res);
 }
