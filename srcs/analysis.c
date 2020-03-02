@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 16:37:08 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 18:11:54 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 	if (lstat(ent->fullpath, &ent->stat) != 0)
 	{
 		ft_putstr_fd(opts->name, 2);
-		ft_putstr_fd(": cannot access '", 2);
+		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(filename, 2);
 		ft_putstr_fd("': ", 2);
 		perror("");
@@ -88,7 +88,8 @@ t_lst		*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 	char			*tmp;
 
 	dirs = NULL;
-	d = get_dir(opts, path);
+	if (!(d = get_dir(opts, path)))
+		return (NULL);
 	while ((ent = readdir(d)))
 		if (!is_hidden(ent->d_name) || opts->opts.a)
 		{

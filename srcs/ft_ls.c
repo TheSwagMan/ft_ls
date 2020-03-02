@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:11:30 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 16:14:55 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 18:12:38 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_lst		*ls(char *path, t_ls_opts *opts)
 		ft_putendl(":");
 	}
 	dirs = dir_analyze(opts, path, &lst);
-	if (opts->opts.l)
+	if (opts->opts.l && lst)
 	{
 		ft_putstr("total ");
 		ft_putnbr(total_dir(lst));
@@ -62,11 +62,13 @@ t_lst		*ls(char *path, t_ls_opts *opts)
 	return (dirs);
 }
 
-void		dir_part(t_ls_opts *opts)
+int		dir_part(t_ls_opts *opts)
 {
 	t_lst		*dirs;
 	char		*dir;
+	int			r;
 
+	r = 0;
 	while (opts->dpaths)
 	{
 		dirs = ls(opts->dpaths->data, opts);
@@ -89,6 +91,7 @@ void		dir_part(t_ls_opts *opts)
 		if (opts->dpaths)
 			ft_putchar('\n');
 	}
+	return (r);
 }
 
 int			main(int ac, char **av)

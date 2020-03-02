@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:08:52 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:08:54 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 18:09:38 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@ DIR			*get_dir(t_ls_opts *opts, char *path)
 	if (!(d = opendir(path)))
 	{
 		ft_putstr_fd(opts->name, 2);
-		ft_putstr_fd(": cannot access '", 2);
-		ft_putstr_fd(path, 2);
-		perror("'");
-		exit(EXIT_FAT_ERR);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(filename(path), 2);
+		ft_putstr_fd(": ", 2);
+		perror("");
+		return (NULL);
 	}
 	return (d);
 }

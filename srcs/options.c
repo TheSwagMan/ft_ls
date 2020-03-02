@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:50:58 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 22:53:09 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/02 17:57:40 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,11 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 		if (!ft_strchr("lRartnuU1G", *sopts))
 		{
 			ft_putstr_fd(opts->name, 2);
-			ft_putstr_fd(": invalid option -- '", 2);
+			ft_putstr_fd(": illegal option -- '", 2);
 			ft_putchar_fd(*sopts, 2);
 			ft_putendl_fd("'", 2);
-			exit(EXIT_FAT_ERR);
+			ft_putendl_fd("usage: ls [-lRartnuU1G] [file ...]", 2);
+			exit(EXIT_ERR);
 		}
 		opts->opts.l = *sopts == 'l' ? 1 : opts->opts.l;
 		opts->opts.rr = *sopts == 'R' ? 1 : opts->opts.rr;
