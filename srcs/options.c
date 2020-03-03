@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:50:58 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 17:57:40 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:09:46 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_ls_opts	*init_ls_opts(int ac, char **av)
 	t_ls_opts	*opts;
 
 	if (!(opts = (t_ls_opts *)malloc(sizeof(*opts))))
-		ls_exit("Malloc error", EXIT_FAT_ERR);
+		ls_exit("malloc failed in init_ls_opts", EXIT_FAT_ERR);
 	init_opts(&(opts->opts));
 	if (isatty(1))
 	{

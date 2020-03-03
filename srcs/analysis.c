@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 18:11:54 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:06:48 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 	t_ls_entry	*ent;
 
 	if (!(ent = malloc(sizeof(*ent))))
-		ls_exit("Malloc error", EXIT_FAT_ERR);
+		ls_exit("malloc failed in analyze_path", EXIT_FAT_ERR);
 	init_ls_entry(ent);
 	ent->fullpath = path_cat(path, filename);
 	ent->str.name = ft_strdup(filename);
@@ -84,22 +84,15 @@ t_lst		*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
 {
 	DIR				*d;
 	struct dirent	*ent;
-	t_lst			*dirs;
-	char			*tmp;
 
-	dirs = NULL;
 	if (!(d = get_dir(opts, path)))
 		return (NULL);
 	while ((ent = readdir(d)))
 		if (!is_hidden(ent->d_name) || opts->opts.a)
-		{
-			tmp = path_cat(path, ent->d_name);
-			if (is_directory(tmp))
-				lst_append(&dirs, tmp);
 			lst_append(flst, analyze_path(opts, path, ent->d_name));
-		}
 	(void)closedir(d);
-	return (dirs);
+	sort_entries(opts, flst);
+	return (get_dirs(*flst));
 }
 
 t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)

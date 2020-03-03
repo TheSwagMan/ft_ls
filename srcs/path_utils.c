@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:12:18 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:12:56 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:11:23 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char		*path_cat(char *dir, char *file)
 	char	*res;
 
 	if (!(res = malloc(ft_strlen(dir) + ft_strlen(file) + 2)))
-		ls_exit("Malloc", EXIT_FAT_ERR);
+		ls_exit("malloc failed in path_cat", EXIT_FAT_ERR);
 	*res = '\0';
 	ft_strcat(res, dir);
 	ft_strcat(res, "/");

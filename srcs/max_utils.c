@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:13:35 by tpotier           #+#    #+#             */
-/*   Updated: 2020/02/25 19:13:37 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:09:28 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_entry_str	*get_max_size(t_lst *lst)
 	t_entry_str	tmp;
 
 	if (!(max = malloc(sizeof(*max))))
-		ls_exit("Malloc", EXIT_FAT_ERR);
+		ls_exit("malloc failed in get_max_size", EXIT_FAT_ERR);
 	init_max(max);
 	lst_goto_n(&lst, 0);
 	while (lst)

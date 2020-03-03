@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 16:01:25 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:07:19 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void		display_link(t_ls_entry *ent)
 	{
 		size = ent->stat.st_size ? ent->stat.st_size : PATH_MAX;
 		if (!(name = malloc(size + 1)))
-			ls_exit("Malloc", EXIT_FAT_ERR);
+			ls_exit("malloc failed in display_link", EXIT_FAT_ERR);
 		if (readlink(ent->fullpath, name, size) != ent->stat.st_size
 				&& ent->stat.st_size)
-			ls_exit("readlink", EXIT_FAT_ERR);
+			ls_exit("readlink failed in display_link", EXIT_FAT_ERR);
 		name[size] = '\0';
 		ft_putstr(" -> ");
 		ft_putstr(name);
@@ -98,28 +98,17 @@ void		display_entry_list_simple(t_ls_opts *op, t_lst *lst)
 	}
 }
 
-void		ls_disp_job(t_ls_opts *opts, t_lst **lst)
+void		ls_disp_job(t_ls_opts *opts, t_lst *lst)
 {
 	t_entry_str	*max;
 
-	if (opts->opts.t)
-	{
-		if (opts->opts.uu)
-			sort_entry_list(opts, lst, sort_by_cdate);
-		else if (opts->opts.u)
-			sort_entry_list(opts, lst, sort_by_adate);
-		else
-			sort_entry_list(opts, lst, sort_by_mdate);
-	}
-	else
-		sort_entry_list(opts, lst, sort_by_name);
-	max = get_max_size(*lst);
-	lst_goto_n(lst, 0);
+	max = get_max_size(lst);
+	lst_goto_n(&lst, 0);
 	if (opts->opts.l)
-		display_entry_list_long(opts, *lst, max);
+		display_entry_list_long(opts, lst, max);
 	else if (opts->opts.o1)
-		display_entry_list_simple(opts, *lst);
+		display_entry_list_simple(opts, lst);
 	else
-		display_entry_list_shrt(opts, *lst, max);
+		display_entry_list_shrt(opts, lst, max);
 	free(max);
 }

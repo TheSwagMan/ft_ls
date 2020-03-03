@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:08:52 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 18:09:38 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 17:14:03 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,21 @@ int			total_dir(t_lst *lst)
 		lst = lst->next;
 	}
 	return (tot);
+}
+
+t_lst		*get_dirs(t_lst *lst)
+{
+	t_lst			*dirs;
+	t_ls_entry		*ent;
+
+	dirs = NULL;
+	lst_goto_n(&lst, 0);
+	while (lst)
+	{
+		ent = lst->data;
+		if (is_directory(ent->fullpath))
+			lst_append(&dirs, ft_strdup(ent->fullpath));
+		lst = lst->next;
+	}
+	return (dirs);
 }

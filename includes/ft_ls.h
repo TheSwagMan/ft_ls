@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 15:59:21 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:03:56 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <errno.h>
 # include "libft.h"
 # include "liblst.h"
+
+# define xmalloc(...)	NULL
 
 # define EXIT_ERR		1
 # define EXIT_FAT_ERR	2
@@ -89,10 +91,11 @@ int				sort_by_adate(void *e1, void *e2);
 int				sort_by_cdate(void *e1, void *e2);
 void			sort_entry_list(t_ls_opts *opts, t_lst **lst,
 		int (*f)(void *e1, void *e2));
+void			sort_entries(t_ls_opts *opts, t_lst **lst);
 void			parse_opts(t_ls_opts *opts, int ac, char **av);
 void			init_opts(t_opts *opts);
 t_ls_opts		*init_ls_opts(int ac, char **av);
-
+t_lst			*get_dirs(t_lst *lst);
 char			*mode_to_str(mode_t mode);
 char			*owner_to_str(uid_t uid);
 char			*group_to_str(gid_t gid);
@@ -108,7 +111,7 @@ DIR				*get_dir(t_ls_opts *opts, char *path);
 t_lst			*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
 char			is_directory(char *path);
 t_entry_str		*get_max_size(t_lst *lst);
-void			ls_disp_job(t_ls_opts *opts, t_lst **lst);
+void			ls_disp_job(t_ls_opts *opts, t_lst *lst);
 int				total_dir(t_lst *lst);
 t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
 size_t			term_size(void);

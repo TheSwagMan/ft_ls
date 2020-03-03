@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:10:49 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 16:05:40 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:11:49 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char		*mode_to_str(mode_t mode)
 	char	*res;
 
 	if (!(res = malloc(11)))
-		return (NULL);
+		ls_exit("malloc failed in mode_to_str", EXIT_FAT_ERR);
 	res[10] = 0;
 	res[0] = S_ISREG(mode) ? '-' : res[0];
 	res[0] = S_ISDIR(mode) ? 'd' : res[0];
