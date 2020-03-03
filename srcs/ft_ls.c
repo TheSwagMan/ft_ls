@@ -6,20 +6,11 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:11:30 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:41:35 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 19:14:05 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-void		ls_exit(char *msg, char code)
-{
-	if (errno)
-		perror(msg);
-	else
-		ft_putendl_fd(msg, STDERR_FILENO);
-	exit(code);
-}
 
 void		free_ls_entry(void *tmp)
 {
@@ -74,39 +65,32 @@ void		disp_lst(t_lst *lst)
 	ft_putendl("");
 }
 
-int		dir_part(t_ls_opts *opts)
+void		dir_part(t_ls_opts *opts, int *r)
 {
 	t_lst		*dirs;
 	char		*dir;
-	int			r;
 
-	r = 0;
 	while (opts->dpaths)
 	{
 		dir = lst_pop(&(opts->dpaths));
-		dirs = ls(dir, opts, &r);
+		dirs = ls(dir, opts, r);
 		free(dir);
 		if (opts->opts.rr)
-		{
 			opts->opts.n_ = 1;
-			if (dirs)
-			{
-				lst_goto_n(&dirs, -1);
-				while (dirs)
-				{
-					dir = lst_pop(&dirs);
-					if (ft_strcmp(filename(dir), ".")
-							&& ft_strcmp(filename(dir), ".."))
-						lst_add(&(opts->dpaths), dir);
-					else
-						free(dir);
-				}
-			}
+		if (dirs && opts->opts.rr)
+			lst_goto_n(&dirs, -1);
+		while (dirs && opts->opts.rr)
+		{
+			dir = lst_pop(&dirs);
+			if (ft_strcmp(filename(dir), ".")
+					&& ft_strcmp(filename(dir), ".."))
+				lst_add(&(opts->dpaths), dir);
+			else
+				free(dir);
 		}
 		if (opts->dpaths)
 			ft_putchar('\n');
 	}
-	return (r);
 }
 
 int			main(int ac, char **av)
@@ -123,8 +107,8 @@ int			main(int ac, char **av)
 	if (file_data && opts->dpaths)
 		ft_putchar('\n');
 	lst_delete(&file_data, free_ls_entry);
-	r += dir_part(opts);
+	dir_part(opts, &r);
 	free(opts);
-	while (1);
+	opts = NULL;
 	return (r);
 }
