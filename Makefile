@@ -6,7 +6,7 @@
 #    By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/15 16:47:18 by tpotier           #+#    #+#              #
-#    Updated: 2020/03/03 17:01:39 by tpotier          ###   ########.fr        #
+#    Updated: 2020/03/03 18:51:33 by tpotier          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ LIBLSTDIR = liblst/
 LIBLST = $(LIBLSTDIR)liblst.a
 LIBLSTINC = $(LIBLSTDIR)incs/
 LIBLSTFLAGS = -L$(LIBLSTDIR) -llst
-CFLAGS = -Wall -Wextra -Werror -I$(IDIR) -I$(LIBFTINC) -I$(LIBLSTINC) -MMD -MP -g
+CFLAGS = -Wall -Wextra -Werror -I$(IDIR) -I$(LIBFTINC) -I$(LIBLSTINC) -MMD -MP \
+		 -g
 
 SRCS = $(addprefix $(SDIR), $(addsuffix .c, $(FILES)))
 INCS = $(addprefix $(IDIR), $(IFILES))

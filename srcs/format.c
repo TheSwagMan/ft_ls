@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:10:49 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:11:49 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:59:41 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ char		*owner_to_str(uid_t uid)
 	struct passwd	*pw;
 
 	pw = getpwuid(uid);
-	return (ft_strdup(pw->pw_name));
+	if (pw)
+		return (ft_strdup(pw->pw_name));
+	else
+		return (ft_itoa(uid));
 }
 
 char		*group_to_str(gid_t gid)
@@ -62,7 +65,10 @@ char		*group_to_str(gid_t gid)
 	struct group	*gr;
 
 	gr = getgrgid(gid);
-	return (ft_strdup(gr->gr_name));
+	if (gr)
+		return (ft_strdup(gr->gr_name));
+	else
+		return (ft_itoa(gid));
 }
 
 char		*date_to_str(time_t tm)

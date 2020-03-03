@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:11:30 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:19:19 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:41:35 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,9 @@ int		dir_part(t_ls_opts *opts)
 	r = 0;
 	while (opts->dpaths)
 	{
-		dirs = ls(lst_pop(&(opts->dpaths)), opts, &r);
+		dir = lst_pop(&(opts->dpaths));
+		dirs = ls(dir, opts, &r);
+		free(dir);
 		if (opts->opts.rr)
 		{
 			opts->opts.n_ = 1;
@@ -96,6 +98,8 @@ int		dir_part(t_ls_opts *opts)
 					if (ft_strcmp(filename(dir), ".")
 							&& ft_strcmp(filename(dir), ".."))
 						lst_add(&(opts->dpaths), dir);
+					else
+						free(dir);
 				}
 			}
 		}
@@ -121,5 +125,6 @@ int			main(int ac, char **av)
 	lst_delete(&file_data, free_ls_entry);
 	r += dir_part(opts);
 	free(opts);
+	while (1);
 	return (r);
 }
