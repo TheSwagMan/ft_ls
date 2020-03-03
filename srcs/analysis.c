@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:51:28 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:06:48 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:17:02 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,22 +80,29 @@ t_ls_entry	*analyze_path(t_ls_opts *opts, char *path, char *filename)
 	return (ent);
 }
 
-t_lst		*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst)
+t_lst		*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst, int *ret)
 {
 	DIR				*d;
 	struct dirent	*ent;
+	t_ls_entry		*tmp;
 
 	if (!(d = get_dir(opts, path)))
 		return (NULL);
 	while ((ent = readdir(d)))
 		if (!is_hidden(ent->d_name) || opts->opts.a)
-			lst_append(flst, analyze_path(opts, path, ent->d_name));
+		{
+			tmp = analyze_path(opts, path, ent->d_name);
+			if (tmp)
+				lst_append(flst, tmp);
+			else
+				*ret += EXIT_ERR;
+		}
 	(void)closedir(d);
 	sort_entries(opts, flst);
 	return (get_dirs(*flst));
 }
 
-t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)
+t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst, int *ret)
 {
 	t_lst		*res;
 	t_ls_entry	*tmp;
@@ -107,6 +114,8 @@ t_lst		*analyze_path_lst(t_ls_opts *opts, t_lst *lst)
 		tmp = analyze_path(opts, ".", lst->data);
 		if (tmp)
 			lst_append(&res, tmp);
+		else
+			*ret += EXIT_ERR;
 		lst = lst->next;
 	}
 	return (res);

@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:03:56 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/03 18:20:16 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 # include <errno.h>
 # include "libft.h"
 # include "liblst.h"
-
-# define xmalloc(...)	NULL
 
 # define EXIT_ERR		1
 # define EXIT_FAT_ERR	2
@@ -108,12 +106,12 @@ char			*path_cat(char *dir, char *file);
 t_ls_entry		*analyze_path(t_ls_opts *opts, char *path, char *filename);
 void			free_ls_entry(void *tmp);
 DIR				*get_dir(t_ls_opts *opts, char *path);
-t_lst			*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst);
+t_lst			*dir_analyze(t_ls_opts *opts, char *path, t_lst **flst, int *r);
 char			is_directory(char *path);
 t_entry_str		*get_max_size(t_lst *lst);
 void			ls_disp_job(t_ls_opts *opts, t_lst *lst);
 int				total_dir(t_lst *lst);
-t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst);
+t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst, int *ret);
 size_t			term_size(void);
 void			display_color_letters(char *c);
 void			get_env_color(t_ls_entry *ent);
