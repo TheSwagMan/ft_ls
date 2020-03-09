@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 20:05:16 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 19:14:28 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/09 15:40:56 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t		term_size(void)
 	struct winsize w;
 
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	if (!w.ws_col)
+		return (80);
 	return (w.ws_col);
 }
 

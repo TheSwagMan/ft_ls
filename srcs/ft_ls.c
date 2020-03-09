@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:11:30 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 19:14:05 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/09 15:37:25 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void		dir_part(t_ls_opts *opts, int *r)
 			else
 				free(dir);
 		}
+		lst_delete(&dirs, free);
 		if (opts->dpaths)
 			ft_putchar('\n');
 	}

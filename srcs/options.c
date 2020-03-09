@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:50:58 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:09:46 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/09 15:35:06 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void		parse_opts(t_ls_opts *opts, int ac, char **av)
 	opts->name = av[0];
 	opts->opts.n_ = k > 1 ? 1 : opts->opts.n_;
 	if (!k)
-		lst_append(&opts->dpaths, ".");
+		lst_append(&opts->dpaths, ft_strdup("."));
 	n = 0;
 	while (++n < ac)
 		if (*(av[n]) == '-')

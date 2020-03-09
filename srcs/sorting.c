@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:14:25 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 16:37:28 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/03/09 15:41:50 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ int			sort_by_name(void *e1, void *e2)
 
 int			sort_by_mdate(void *e1, void *e2)
 {
+	if (((t_ls_entry *)e1)->stat.st_mtime
+			== ((t_ls_entry *)e2)->stat.st_mtime)
+		return (sort_by_name(e1, e2));
 	return (((t_ls_entry *)e1)->stat.st_mtime
 			< ((t_ls_entry *)e2)->stat.st_mtime);
 }
