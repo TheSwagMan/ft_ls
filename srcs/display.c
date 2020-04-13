@@ -22,10 +22,7 @@ void		display_link(t_ls_entry *ent)
 		size = ent->stat.st_size ? ent->stat.st_size : PATH_MAX;
 		if (!(name = malloc(size + 1)))
 			ls_exit("malloc failed in display_link", EXIT_FAT_ERR);
-		if (readlink(ent->fullpath, name, size) != ent->stat.st_size
-				&& ent->stat.st_size)
-			ls_exit("readlink failed in display_link", EXIT_FAT_ERR);
-		name[size] = '\0';
+		name[readlink(ent->fullpath, name, size)] = '\0';
 		ft_putstr(" -> ");
 		ft_putstr(name);
 		free(name);
