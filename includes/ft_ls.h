@@ -116,5 +116,6 @@ size_t			term_size(void);
 void			display_color_letters(char *c);
 void			get_env_color(t_ls_entry *ent);
 void			display_name(t_ls_opts *opts, t_ls_entry *ent);
+time_t			get_birthtime(struct stat st);
 
 #endif

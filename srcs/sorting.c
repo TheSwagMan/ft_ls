@@ -35,8 +35,8 @@ int			sort_by_adate(void *e1, void *e2)
 
 int			sort_by_cdate(void *e1, void *e2)
 {
-	return (((t_ls_entry *)e1)->stat.st_birthtime
-			< ((t_ls_entry *)e2)->stat.st_birthtime);
+	return (get_birthtime(((t_ls_entry *)e1)->stat)
+			< get_birthtime(((t_ls_entry *)e2)->stat));
 }
 
 void		sort_entry_list(t_ls_opts *opts, t_lst **lst,

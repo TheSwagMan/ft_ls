@@ -30,3 +30,19 @@ void		ls_exit(char *msg, char code)
 		ft_putendl_fd(msg, STDERR_FILENO);
 	exit(code);
 }
+
+#ifdef __APPLE__
+
+time_t		get_birthtime(struct stat st)
+{
+	return (st.st_birthtime);
+}
+
+#else
+
+time_t		get_birthtime(struct stat st)
+{
+	return (st.st_ctime);
+}
+
+#endif

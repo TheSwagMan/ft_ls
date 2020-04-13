@@ -27,7 +27,7 @@ void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 	else
 		ent->str.size = ft_itoa(ent->stat.st_size);
 	if (opts->opts.uu)
-		ent->str.date = date_to_str(ent->stat.st_birthtime);
+		ent->str.date = date_to_str(get_birthtime(ent->stat));
 	else if (opts->opts.u)
 		ent->str.date = date_to_str(ent->stat.st_atime);
 	else
