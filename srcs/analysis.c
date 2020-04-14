@@ -16,7 +16,7 @@ void		set_fields(t_ls_opts *opts, t_ls_entry *ent)
 {
 	if (!ent)
 		ls_exit("set_field NULL", EXIT_FAT_ERR);
-	ent->str.mode = mode_to_str(ent->stat.st_mode);
+	ent->str.mode = mode_to_str(ent->stat.st_mode, ent->fullpath);
 	ent->str.nlink = ft_itoa(ent->stat.st_nlink);
 	ent->str.owner = opts->opts.n ? ft_itoa(ent->stat.st_uid)
 		: owner_to_str(ent->stat.st_uid);

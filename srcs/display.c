@@ -37,7 +37,7 @@ void		display_entry_list_long(t_ls_opts *op, t_lst *lst, t_entry_str *max)
 	{
 		ent = lst->data;
 		ft_putstr(ent->str.mode);
-		ft_putnchar(' ', 2 + (max->nlink_s - ent->str.nlink_s));
+		ft_putnchar(' ', 1 + (max->nlink_s - ent->str.nlink_s));
 		ft_putstr(ent->str.nlink);
 		ft_putchar(' ');
 		ft_putstr(ent->str.owner);
@@ -52,6 +52,32 @@ void		display_entry_list_long(t_ls_opts *op, t_lst *lst, t_entry_str *max)
 		display_name(op, ent);
 		display_link(ent);
 		ft_putchar('\n');
+		if (op->opts.aaa)
+		{
+			char *s;
+			char *snbr;
+			ssize_t n = listxattr(ent->fullpath, NULL, 0, XATTR_NOFOLLOW);
+			ssize_t i = 0;
+			if (n > 0)
+			{
+				if (!(s = malloc(n * sizeof(*s))))
+					ls_exit("malloc failed in display_entry_list", EXIT_FAT_ERR);
+				listxattr(ent->fullpath, s, n, XATTR_NOFOLLOW);
+				while (i < n)
+				{
+					ft_putchar('\t');
+					ft_putstr(&(s[i]));
+					ft_putchar('\t');
+					snbr = ft_itoa(getxattr(ent->fullpath, &(s[i]), NULL, 0, 0,
+								XATTR_NOFOLLOW));
+					if (5 - ft_strlen(snbr) > 0)
+						ft_putnchar(' ', 5 - ft_strlen(snbr));
+					ft_putstr(snbr);
+					ft_putendl(" ");
+					while (s[i++]);
+				}
+			}
+		}
 		lst = lst->next;
 	}
 }

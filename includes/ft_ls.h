@@ -25,6 +25,8 @@
 # include <pwd.h>
 # include <grp.h>
 # include <errno.h>
+# include <sys/xattr.h>
+# include <sys/acl.h>
 # include "libft.h"
 # include "liblst.h"
 
@@ -46,6 +48,7 @@ typedef struct	s_opts
 	uint8_t		uu : 1;
 	uint8_t		o1 : 1;
 	uint8_t		gg : 1;
+	uint8_t		aaa : 1;
 }				t_opts;
 
 typedef struct	s_ls_opts
@@ -94,7 +97,7 @@ void			parse_opts(t_ls_opts *opts, int ac, char **av);
 void			init_opts(t_opts *opts);
 t_ls_opts		*init_ls_opts(int ac, char **av);
 t_lst			*get_dirs(t_lst *lst);
-char			*mode_to_str(mode_t mode);
+char			*mode_to_str(mode_t mode, char *path);
 char			*owner_to_str(uid_t uid);
 char			*group_to_str(gid_t gid);
 char			*date_to_str(time_t tm);

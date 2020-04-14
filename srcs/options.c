@@ -16,13 +16,13 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 {
 	while (*(++sopts))
 	{
-		if (!ft_strchr("lRartnuU1G", *sopts))
+		if (!ft_strchr("lRartnuU1G@", *sopts))
 		{
 			ft_putstr_fd(opts->name, 2);
 			ft_putstr_fd(": illegal option -- '", 2);
 			ft_putchar_fd(*sopts, 2);
 			ft_putendl_fd("'", 2);
-			ft_putendl_fd("usage: ls [-lRartnuU1G] [file ...]", 2);
+			ft_putendl_fd("usage: ls [-lRartnuU1G@] [file ...]", 2);
 			exit(EXIT_ERR);
 		}
 		opts->opts.l = *sopts == 'l' ? 1 : opts->opts.l;
@@ -35,6 +35,7 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 		opts->opts.uu = *sopts == 'U' ? 1 : opts->opts.uu;
 		opts->opts.o1 = *sopts == '1' ? 1 : opts->opts.o1;
 		opts->opts.gg = *sopts == 'G' ? 1 : opts->opts.gg;
+		opts->opts.aaa = *sopts == '@' ? 1 : opts->opts.aaa;
 	}
 }
 

@@ -31,13 +31,16 @@ void		format_perms(mode_t mode, char *res)
 		res[6] = mode & S_IXOTH ? 't' : 'T';
 }
 
-char		*mode_to_str(mode_t mode)
+char		*mode_to_str(mode_t mode, char *path)
 {
 	char	*res;
 
-	if (!(res = malloc(11)))
+	if (!(res = malloc(12)))
 		ls_exit("malloc failed in mode_to_str", EXIT_FAT_ERR);
-	res[10] = 0;
+	res[11] = 0;
+	res[10] = ' ';
+	res[10] = acl_get_file(path, ACL_TYPE_EXTENDED) ? '+' : res[10];
+	res[10] = listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0 ? '@' : res[10];
 	res[0] = S_ISREG(mode) ? '-' : res[0];
 	res[0] = S_ISDIR(mode) ? 'd' : res[0];
 	res[0] = S_ISLNK(mode) ? 'l' : res[0];
