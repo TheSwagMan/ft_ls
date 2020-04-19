@@ -23,6 +23,8 @@ void		disp_attr(char *name, int size)
 	if (5 - ft_strlen(snbr) > 0)
 		ft_putnchar(' ', 5 - ft_strlen(snbr));
 	ft_putstr(snbr);
+	free(snbr);
+	ft_putchar('\n');
 }
 
 #ifdef __APPLE__
@@ -42,7 +44,7 @@ void		display_xattr(t_ls_opts *opts, t_ls_entry *ent)
 		listxattr(ent->fullpath, s, n, XATTR_NOFOLLOW);
 		while (i < n)
 		{
-			disp_attr(&(s[i]), getxattr(ent->fullpath, name, NULL, 0, 0,
+			disp_attr(&(s[i]), getxattr(ent->fullpath, &(s[i]), NULL, 0, 0,
 						XATTR_NOFOLLOW));
 			while (s[i++])
 				continue;

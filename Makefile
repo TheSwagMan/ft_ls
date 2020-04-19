@@ -26,7 +26,7 @@ LIBLST = $(LIBLSTDIR)liblst.a
 LIBLSTINC = $(LIBLSTDIR)incs/
 LIBLSTFLAGS = -L$(LIBLSTDIR) -llst
 CFLAGS = -Wall -Wextra -Werror -I$(IDIR) -I$(LIBFTINC) -I$(LIBLSTINC) -MMD -MP \
-		 -g -lacl
+		 -g
 
 SRCS = $(addprefix $(SDIR), $(addsuffix .c, $(FILES)))
 INCS = $(addprefix $(IDIR), $(IFILES))
