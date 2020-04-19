@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/04/19 15:22:28 by user42           ###   ########.fr       */
+/*   Updated: 2020/04/19 20:08:08 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct	s_opts
 	uint8_t		o1 : 1;
 	uint8_t		gg : 1;
 	uint8_t		aaa : 1;
+	uint8_t		f : 1;
 }				t_opts;
 
 typedef struct	s_ls_opts

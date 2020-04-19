@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 16:59:38 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 17:09:17 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/04/19 20:06:13 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ void		sort_entries(t_ls_opts *opts, t_lst **lst)
 		else
 			sort_entry_list(opts, lst, sort_by_mdate);
 	}
-	else
+	else if (!opts->opts.f)
 		sort_entry_list(opts, lst, sort_by_name);
 }

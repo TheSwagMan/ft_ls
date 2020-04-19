@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 18:50:58 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/09 15:35:06 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/04/19 20:09:01 by tpotier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 {
 	while (*(++sopts))
 	{
-		if (!ft_strchr("lRartnuU1G@", *sopts))
+		if (!ft_strchr("lRartnuU1G@f", *sopts))
 		{
 			ft_putstr_fd(opts->name, 2);
 			ft_putstr_fd(": illegal option -- '", 2);
 			ft_putchar_fd(*sopts, 2);
 			ft_putendl_fd("'", 2);
-			ft_putendl_fd("usage: ls [-lRartnuU1G@] [file ...]", 2);
+			ft_putendl_fd("usage: ls [-lRartnuU1G@f] [file ...]", 2);
 			exit(EXIT_ERR);
 		}
 		opts->opts.l = *sopts == 'l' ? 1 : opts->opts.l;
@@ -36,6 +36,8 @@ void		add_opt(t_ls_opts *opts, char *sopts)
 		opts->opts.o1 = *sopts == '1' ? 1 : opts->opts.o1;
 		opts->opts.gg = *sopts == 'G' ? 1 : opts->opts.gg;
 		opts->opts.aaa = *sopts == '@' ? 1 : opts->opts.aaa;
+		opts->opts.f = *sopts == 'f' ? 1 : opts->opts.f;
+		opts->opts.a = *sopts == 'f' ? 1 : opts->opts.a;
 	}
 }
 
