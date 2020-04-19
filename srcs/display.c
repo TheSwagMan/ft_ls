@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/25 19:09:19 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:07:19 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/04/19 15:22:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,32 +52,7 @@ void		display_entry_list_long(t_ls_opts *op, t_lst *lst, t_entry_str *max)
 		display_name(op, ent);
 		display_link(ent);
 		ft_putchar('\n');
-		if (op->opts.aaa)
-		{
-			char *s;
-			char *snbr;
-			ssize_t n = listxattr(ent->fullpath, NULL, 0, XATTR_NOFOLLOW);
-			ssize_t i = 0;
-			if (n > 0)
-			{
-				if (!(s = malloc(n * sizeof(*s))))
-					ls_exit("malloc failed in display_entry_list", EXIT_FAT_ERR);
-				listxattr(ent->fullpath, s, n, XATTR_NOFOLLOW);
-				while (i < n)
-				{
-					ft_putchar('\t');
-					ft_putstr(&(s[i]));
-					ft_putchar('\t');
-					snbr = ft_itoa(getxattr(ent->fullpath, &(s[i]), NULL, 0, 0,
-								XATTR_NOFOLLOW));
-					if (5 - ft_strlen(snbr) > 0)
-						ft_putnchar(' ', 5 - ft_strlen(snbr));
-					ft_putstr(snbr);
-					ft_putendl(" ");
-					while (s[i++]);
-				}
-			}
-		}
+		display_xattr(op, ent);
 		lst = lst->next;
 	}
 }

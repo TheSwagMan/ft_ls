@@ -71,3 +71,4 @@ void		display_name(t_ls_opts *opts, t_ls_entry *ent)
 	if (opts->opts.gg && isatty(1))
 		ft_putstr("\e[0m");
 }
+

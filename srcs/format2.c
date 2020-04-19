@@ -36,3 +36,25 @@ char		*format_majmin(dev_t rdev)
 	free(min);
 	return (res);
 }
+
+#ifdef __APPLE__
+
+void		set_acl_xattr(char *res, char *path)
+{
+	acl_t	acl;
+
+	acl = acl_get_file(path, ACL_TYPE_EXTENDED);
+	res[10] = acl ? '+' : res[10];
+	acl_free(acl);
+	res[10] = listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0 ? '@' : res[10];
+}
+
+#else
+
+void		set_acl_xattr(char *res, char *path)
+{
+	(void)res;
+	(void)path;
+}
+
+#endif

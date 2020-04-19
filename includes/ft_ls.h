@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 05:28:13 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/03 18:20:16 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/04/19 15:22:28 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,9 @@ t_lst			*analyze_path_lst(t_ls_opts *opts, t_lst *lst, int *ret);
 size_t			term_size(void);
 void			display_color_letters(char *c);
 void			get_env_color(t_ls_entry *ent);
+void			set_acl_xattr(char *res, char *path);
 void			display_name(t_ls_opts *opts, t_ls_entry *ent);
 time_t			get_birthtime(struct stat st);
+void			display_xattr(t_ls_opts *opts, t_ls_entry *ent);
 
 #endif

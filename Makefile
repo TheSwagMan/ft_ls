@@ -6,13 +6,13 @@
 #    By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/15 16:47:18 by tpotier           #+#    #+#              #
-#    Updated: 2020/03/03 18:51:33 by tpotier          ###   ########.fr        #
+#    Updated: 2020/04/19 15:22:44 by user42           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 FILES = ft_ls options sorting format display analysis dir_utils max_utils \
-		path_utils utils display2 format2 sorting2
+		path_utils utils display2 format2 sorting2 display3
 IFILES = ft_ls.h
 NAME = ft_ls
 SDIR = srcs/
@@ -26,7 +26,7 @@ LIBLST = $(LIBLSTDIR)liblst.a
 LIBLSTINC = $(LIBLSTDIR)incs/
 LIBLSTFLAGS = -L$(LIBLSTDIR) -llst
 CFLAGS = -Wall -Wextra -Werror -I$(IDIR) -I$(LIBFTINC) -I$(LIBLSTINC) -MMD -MP \
-		 -g
+		 -g -lacl
 
 SRCS = $(addprefix $(SDIR), $(addsuffix .c, $(FILES)))
 INCS = $(addprefix $(IDIR), $(IFILES))

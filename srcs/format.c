@@ -39,8 +39,7 @@ char		*mode_to_str(mode_t mode, char *path)
 		ls_exit("malloc failed in mode_to_str", EXIT_FAT_ERR);
 	res[11] = 0;
 	res[10] = ' ';
-	res[10] = acl_get_file(path, ACL_TYPE_EXTENDED) ? '+' : res[10];
-	res[10] = listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0 ? '@' : res[10];
+	set_acl_xattr(res, path);
 	res[0] = S_ISREG(mode) ? '-' : res[0];
 	res[0] = S_ISDIR(mode) ? 'd' : res[0];
 	res[0] = S_ISLNK(mode) ? 'l' : res[0];
