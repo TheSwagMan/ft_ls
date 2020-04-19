@@ -6,7 +6,7 @@
 /*   By: tpotier <tpotier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/02 15:56:45 by tpotier           #+#    #+#             */
-/*   Updated: 2020/03/02 16:01:48 by tpotier          ###   ########.fr       */
+/*   Updated: 2020/04/19 15:29:00 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,3 @@ void		display_name(t_ls_opts *opts, t_ls_entry *ent)
 	if (opts->opts.gg && isatty(1))
 		ft_putstr("\e[0m");
 }
-
